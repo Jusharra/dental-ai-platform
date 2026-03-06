@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Download, Mail, RefreshCw, Send } from 'lucide-react'
 import type { ReportType } from '@/app/api/reports/data/route'
 
@@ -39,6 +39,7 @@ function Stat({ label, value, sub }: { label: string; value: string | number; su
 function ReportPreview({ type, data }: { type: ReportType; data: Record<string, unknown> }) {
   if (type === 'call_performance') {
     const d = data as { total_calls: number; total_cost_cents: number; avg_duration_seconds: number; total_duration_seconds: number; by_type: Record<string, { count: number; duration_s: number; cost_cents: number }>; by_outcome: Record<string, number> }
+    if (!d.by_type) return null
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -103,6 +104,7 @@ function ReportPreview({ type, data }: { type: ReportType; data: Record<string, 
 
   if (type === 'executive') {
     const d = data as { call_performance: { total_calls: number; total_cost_cents: number }; confirmation: { confirmation_rate: number }; recall: { reactivation_rate: number; appointments_booked: number }; insurance: { staff_verified: number } }
+    if (!d.call_performance || !d.confirmation || !d.recall) return null
     return (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Stat label="Total Calls"       value={d.call_performance.total_calls} />
@@ -126,17 +128,21 @@ export function AdminReportsClient({ practices }: { practices: { id: string; nam
   const [sending, setSending]       = useState(false)
   const [sent, setSent]             = useState(false)
 
+  const fetchGen = useRef(0)
   const start = PRESETS[preset].start()
   const end   = PRESETS[preset].end()
 
   const fetchReport = useCallback(async () => {
     if (!practiceId) return
+    const gen = ++fetchGen.current
     setLoading(true)
+    setReportData(null)
     try {
       const res = await fetch(`/api/reports/data?type=${reportType}&start=${start}&end=${end}&practice_id=${practiceId}`)
-      if (res.ok) setReportData(await res.json())
+      const data = res.ok ? await res.json() : null
+      if (gen === fetchGen.current) setReportData(data)
     } finally {
-      setLoading(false)
+      if (gen === fetchGen.current) setLoading(false)
     }
   }, [practiceId, reportType, start, end])
 
