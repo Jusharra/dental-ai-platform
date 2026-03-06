@@ -1,0 +1,50 @@
+import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
+import { AdminSidebar } from '@/components/admin/admin-sidebar'
+import { ImpersonationBanner } from '@/components/admin/impersonation-banner'
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/admin/login')
+
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role, full_name')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'super_admin') redirect('/dashboard')
+
+  // Check for active impersonation session
+  const cookieStore = cookies()
+  const impersonatingId = cookieStore.get('admin_impersonating')?.value ?? null
+
+  let impersonatedPracticeName: string | null = null
+  if (impersonatingId) {
+    const service = createServiceClient()
+    const { data: practice } = await service
+      .from('practices')
+      .select('name')
+      .eq('id', impersonatingId)
+      .single()
+    impersonatedPracticeName = practice?.name ?? null
+  }
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-slate-950">
+      <AdminSidebar adminName={profile.full_name} />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {impersonatedPracticeName && (
+          <ImpersonationBanner practiceName={impersonatedPracticeName} />
+        )}
+        <main className="flex-1 overflow-y-auto bg-slate-900/50">
+          <div className="p-6 max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
+  )
+}
