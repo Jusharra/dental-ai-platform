@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator'
 import {
   Copy, Check, Eye, EyeOff, ArrowRight, ArrowLeft, Bot,
   Plug, RefreshCw, CheckCircle, Circle, ChevronDown, ChevronUp,
+  CreditCard, ExternalLink,
 } from 'lucide-react'
 
 // ── PMS catalogue ──────────────────────────────────────────────────────────────
@@ -115,7 +116,28 @@ type Profile = {
     email: string
     webhook_secret: string | null
     settings: PracticeSettings | null
+    subscription_status: string | null
+    subscription_tier: string | null
+    stripe_customer_id: string | null
+    trial_ends_at: string | null
   } | null
+}
+
+const BILLING_TIERS = [
+  { value: 'starter',      label: 'Serenity Capture',  price: '$295/mo' },
+  { value: 'professional', label: 'Serenity Complete',  price: '$495/mo' },
+  { value: 'enterprise',   label: 'Enterprise',          price: 'Custom'  },
+]
+
+const TIER_LABEL: Record<string, string> = {
+  starter: 'Serenity Capture', professional: 'Serenity Complete', enterprise: 'Enterprise',
+}
+
+const STATUS_COLOR: Record<string, string> = {
+  active:    'bg-green-100 text-green-700',
+  trial:     'bg-blue-100 text-blue-700',
+  cancelled: 'bg-slate-100 text-slate-600',
+  suspended: 'bg-red-100 text-red-700',
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -183,6 +205,11 @@ export default function SettingsPage() {
   const [pmsFields, setPmsFields] = useState<Record<string, string>>({})
   const [pmsConnected, setPmsConnected] = useState(false)
 
+  // Billing
+  const [billingTier, setBillingTier]       = useState('starter')
+  const [billingLoading, setBillingLoading] = useState(false)
+  const [billingError, setBillingError]     = useState<string | null>(null)
+
   // Sync config
   const [syncAppointments, setSyncAppointments] = useState(true)
   const [syncPatients, setSyncPatients] = useState(true)
@@ -207,7 +234,7 @@ export default function SettingsPage() {
       if (!user) return
       const { data } = await supabase
         .from('users')
-        .select('full_name, email, phone, job_title, practice_id, practices(id, name, address, city, state, zip_code, phone, email, webhook_secret, settings)')
+        .select('full_name, email, phone, job_title, practice_id, practices(id, name, address, city, state, zip_code, phone, email, webhook_secret, settings, subscription_status, subscription_tier, stripe_customer_id, trial_ends_at)')
         .eq('id', user.id)
         .single()
       if (!data) return
@@ -349,6 +376,42 @@ export default function SettingsPage() {
     }, 'Sync settings saved', 'sync')
   }
 
+  async function handleManageBilling() {
+    setBillingLoading(true)
+    setBillingError(null)
+    try {
+      const res  = await fetch('/api/billing/portal', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      window.location.href = data.url
+    } catch (e) {
+      setBillingError(e instanceof Error ? e.message : 'Failed to open billing portal')
+      setBillingLoading(false)
+    }
+  }
+
+  async function handleSubscribe() {
+    setBillingLoading(true)
+    setBillingError(null)
+    try {
+      const res  = await fetch('/api/billing/create-checkout', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ tier: billingTier }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      if (data.redirect_to_portal) {
+        await handleManageBilling()
+        return
+      }
+      window.location.href = data.url
+    } catch (e) {
+      setBillingError(e instanceof Error ? e.message : 'Failed to start checkout')
+      setBillingLoading(false)
+    }
+  }
+
   async function handlePasswordChange(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setSaving('password')
@@ -437,6 +500,99 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* ── BILLING ──────────────────────────────────────────────────────────── */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-start gap-3">
+            <div className="p-1.5 rounded-md bg-orange-100 mt-0.5">
+              <CreditCard className="h-4 w-4 text-orange-600" />
+            </div>
+            <div>
+              <CardTitle>Subscription &amp; Billing</CardTitle>
+              <CardDescription>Manage your plan and payment information</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Current plan summary */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="border rounded-lg p-3">
+              <p className="text-xs text-muted-foreground mb-1">Current Plan</p>
+              <p className="text-sm font-semibold">
+                {TIER_LABEL[profile.practices?.subscription_tier ?? ''] ?? profile.practices?.subscription_tier ?? 'None'}
+              </p>
+            </div>
+            <div className="border rounded-lg p-3">
+              <p className="text-xs text-muted-foreground mb-1">Status</p>
+              {profile.practices?.subscription_status ? (
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_COLOR[profile.practices.subscription_status] ?? 'bg-slate-100 text-slate-600'}`}>
+                  {profile.practices.subscription_status}
+                </span>
+              ) : (
+                <span className="text-sm text-muted-foreground">—</span>
+              )}
+            </div>
+            {profile.practices?.trial_ends_at && (
+              <div className="border rounded-lg p-3 col-span-2">
+                <p className="text-xs text-muted-foreground mb-1">Trial Ends</p>
+                <p className="text-sm font-medium">{new Date(profile.practices.trial_ends_at).toLocaleDateString()}</p>
+              </div>
+            )}
+          </div>
+
+          {billingError && <p className="text-destructive text-sm">{billingError}</p>}
+
+          {profile.practices?.stripe_customer_id ? (
+            /* Already a Stripe customer — open portal */
+            <Button
+              type="button"
+              onClick={handleManageBilling}
+              disabled={billingLoading}
+              className="w-full gap-2"
+            >
+              {billingLoading
+                ? <RefreshCw className="h-4 w-4 animate-spin" />
+                : <ExternalLink className="h-4 w-4" />}
+              {billingLoading ? 'Opening…' : 'Manage Subscription'}
+            </Button>
+          ) : (
+            /* No subscription yet — show tier picker + subscribe */
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Choose a plan</p>
+              <div className="grid grid-cols-3 gap-2">
+                {BILLING_TIERS.map(t => (
+                  <button
+                    key={t.value}
+                    type="button"
+                    onClick={() => setBillingTier(t.value)}
+                    className={`p-3 rounded-lg border text-left transition ${
+                      billingTier === t.value
+                        ? 'border-orange-500 bg-orange-50'
+                        : 'border-border hover:border-orange-300'
+                    }`}
+                  >
+                    <p className={`text-xs font-semibold ${billingTier === t.value ? 'text-orange-600' : 'text-foreground'}`}>{t.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t.price}</p>
+                  </button>
+                ))}
+              </div>
+              <Button
+                type="button"
+                onClick={handleSubscribe}
+                disabled={billingLoading}
+                className="w-full gap-2 bg-orange-500 hover:bg-orange-400 text-white"
+              >
+                {billingLoading
+                  ? <RefreshCw className="h-4 w-4 animate-spin" />
+                  : <CreditCard className="h-4 w-4" />}
+                {billingLoading ? 'Redirecting…' : 'Start Free Trial'}
+              </Button>
+              <p className="text-xs text-center text-muted-foreground">14-day free trial · No credit card required to start</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* ── PMS INTEGRATIONS ─────────────────────────────────────────────────── */}
       <Card>

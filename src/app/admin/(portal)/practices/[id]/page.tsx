@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ArrowLeft, Phone, Users, FileText, CheckCircle, Plug, ExternalLink, AlertCircle } from 'lucide-react'
 import { ImpersonateButton } from '@/components/admin/impersonate-button'
 import { PracticeStatusForm } from '@/components/admin/practice-status-form'
+import { SubscriptionManager } from '@/components/admin/subscription-manager'
 
 export default async function AdminPracticeDetailPage({ params }: { params: { id: string } }) {
   const service = createServiceClient()
@@ -267,7 +268,14 @@ export default async function AdminPracticeDetailPage({ params }: { params: { id
         </TabsContent>
 
         {/* ── ADMIN ── */}
-        <TabsContent value="admin" className="mt-4">
+        <TabsContent value="admin" className="mt-4 space-y-4">
+          <SubscriptionManager
+            practiceId={practice.id}
+            currentStatus={practice.subscription_status}
+            currentTier={practice.subscription_tier}
+            stripeCustomerId={practice.stripe_customer_id}
+            stripeSubscriptionId={practice.stripe_subscription_id}
+          />
           <PracticeStatusForm practice={practice} />
         </TabsContent>
       </Tabs>
