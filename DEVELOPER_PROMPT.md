@@ -1,9 +1,5 @@
 # DEVELOPER PROMPT - DENTAL AI PLATFORM
 
-**Hand this entire folder + this document to your developer**
-
----
-
 ## 🎯 PROJECT GOAL
 
 Build a Next.js + Supabase web platform to replace Airtable as the backend for our dental AI automation system.
