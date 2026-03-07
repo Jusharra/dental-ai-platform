@@ -103,7 +103,8 @@ export async function POST(request: NextRequest) {
 
       // ── Payment failed → suspend practice ─────────────────────────────────
       case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const invoice = event.data.object as any
         if (!invoice.subscription) break
 
         const { data: practice } = await service
@@ -122,7 +123,8 @@ export async function POST(request: NextRequest) {
 
       // ── Payment succeeded → ensure active ────────────────────────────────
       case 'invoice.payment_succeeded': {
-        const invoice = event.data.object as Stripe.Invoice
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const invoice = event.data.object as any
         if (!invoice.subscription || invoice.billing_reason === 'subscription_create') break
 
         const { data: practice } = await service
