@@ -1,7 +1,7 @@
 'use client'
 
-import { Suspense, useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,7 +10,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 function ResetPasswordForm() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const supabase = createClient()
 
   const [password, setPassword] = useState('')
@@ -18,23 +17,6 @@ function ResetPasswordForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
-  const [sessionReady, setSessionReady] = useState(false)
-
-  useEffect(() => {
-    const code = searchParams.get('code')
-    if (!code) {
-      setError('Invalid or expired reset link. Please request a new one.')
-      return
-    }
-
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-      if (error) {
-        setError('This reset link has expired or already been used. Please request a new one.')
-      } else {
-        setSessionReady(true)
-      }
-    })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -70,33 +52,6 @@ function ResetPasswordForm() {
             Your password has been reset. Redirecting you to the dashboard…
           </CardDescription>
         </CardHeader>
-      </Card>
-    )
-  }
-
-  if (!sessionReady && !error) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Verifying link…</CardTitle>
-          <CardDescription>Please wait while we verify your reset link.</CardDescription>
-        </CardHeader>
-      </Card>
-    )
-  }
-
-  if (error && !sessionReady) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Link Expired</CardTitle>
-          <CardDescription>{error}</CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <Button variant="outline" className="w-full" onClick={() => router.push('/forgot-password')}>
-            Request a New Link
-          </Button>
-        </CardFooter>
       </Card>
     )
   }
@@ -150,13 +105,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={
-      <Card>
-        <CardHeader>
-          <CardTitle>Loading…</CardTitle>
-        </CardHeader>
-      </Card>
-    }>
+    <Suspense>
       <ResetPasswordForm />
     </Suspense>
   )

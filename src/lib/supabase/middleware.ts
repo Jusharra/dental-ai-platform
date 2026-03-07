@@ -31,7 +31,7 @@ export async function updateSession(request: NextRequest) {
 
   // ── Public paths — no auth required ─────────────────────────────────────────
   const publicPaths = [
-    '/login', '/signup', '/forgot-password', '/api/',
+    '/login', '/signup', '/forgot-password', '/reset-password', '/auth/callback', '/api/',
     '/how-it-works', '/solutions', '/pricing', '/faqs', '/contact',
     '/privacy', '/terms', '/hipaa', '/verify-insurance',
     '/admin/login',
