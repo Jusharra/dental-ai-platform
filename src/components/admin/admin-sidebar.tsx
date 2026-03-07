@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
   LayoutDashboard, Building2, Users, FileText,
-  Settings, LogOut, Shield, Menu, X, BarChart3,
+  Settings, LogOut, Shield, Menu, X, BarChart3, Users2,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -16,6 +16,7 @@ const nav = [
   { name: 'Overview',   href: '/admin/dashboard',  icon: LayoutDashboard },
   { name: 'Practices',  href: '/admin/practices',   icon: Building2       },
   { name: 'Users',      href: '/admin/users',       icon: Users           },
+  { name: 'CRM',        href: '/admin/crm',         icon: Users2          },
   { name: 'Reports',    href: '/admin/reports',     icon: BarChart3       },
   { name: 'Audit Logs', href: '/admin/audit-logs',  icon: FileText        },
   { name: 'Security',   href: '/admin/security',    icon: Shield          },
