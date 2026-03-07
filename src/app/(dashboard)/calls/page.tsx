@@ -111,11 +111,11 @@ export default async function CallsPage({
                     <TableCell>
                       {call.patients ? (
                         <Link
-                          href={`/patients/${(call.patients as { id: string; first_name: string; last_name: string }).id}`}
+                          href={`/patients/${(call.patients as unknown as { id: string; first_name: string; last_name: string }).id}`}
                           className="text-primary hover:underline font-medium"
                         >
-                          {(call.patients as { first_name: string; last_name: string }).first_name}{' '}
-                          {(call.patients as { first_name: string; last_name: string }).last_name}
+                          {(call.patients as unknown as { first_name: string; last_name: string }).first_name}{' '}
+                          {(call.patients as unknown as { first_name: string; last_name: string }).last_name}
                         </Link>
                       ) : (
                         <span className="text-muted-foreground">Unknown</span>
