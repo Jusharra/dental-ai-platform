@@ -4,27 +4,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { AddCampaignDialog } from '@/components/recalls/add-campaign-dialog'
-import { Megaphone, Users, CheckCircle, CalendarCheck } from 'lucide-react'
-
-const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  draft: 'outline',
-  active: 'default',
-  paused: 'secondary',
-  completed: 'secondary',
-}
+import { CampaignActions } from '@/components/recalls/campaign-actions'
+import { Megaphone, Users, CalendarCheck, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 
 const statusColors: Record<string, string> = {
-  draft: 'text-muted-foreground',
-  active: 'text-green-600',
-  paused: 'text-yellow-600',
+  draft:     'text-muted-foreground',
+  active:    'text-green-600',
+  paused:    'text-yellow-600',
   completed: 'text-blue-600',
 }
 
 const campaignTypeLabels: Record<string, string> = {
   '6month_cleaning': '6-Month Cleaning',
-  annual_checkup: 'Annual Checkup',
-  followup: 'Follow-Up',
-  custom: 'Custom',
+  annual_checkup:    'Annual Checkup',
+  followup:          'Follow-Up',
+  custom:            'Custom',
 }
 
 export default async function RecallsPage() {
@@ -34,11 +29,7 @@ export default async function RecallsPage() {
 
   const supabase = createClient()
 
-  const [
-    { data: campaigns },
-    { count: activeCampaigns },
-    { count: completedCampaigns },
-  ] = await Promise.all([
+  const [{ data: campaigns }, { count: activeCampaigns }] = await Promise.all([
     supabase
       .from('recall_campaigns')
       .select('*')
@@ -49,14 +40,9 @@ export default async function RecallsPage() {
       .select('*', { count: 'exact', head: true })
       .eq('practice_id', practiceId)
       .eq('status', 'active'),
-    supabase
-      .from('recall_campaigns')
-      .select('*', { count: 'exact', head: true })
-      .eq('practice_id', practiceId)
-      .eq('status', 'completed'),
   ])
 
-  const totalBooked = campaigns?.reduce((sum, c) => sum + (c.appointments_booked || 0), 0) || 0
+  const totalBooked   = campaigns?.reduce((sum, c) => sum + (c.appointments_booked || 0), 0) || 0
   const totalPatients = campaigns?.reduce((sum, c) => sum + (c.total_patients || 0), 0) || 0
 
   return (
@@ -141,6 +127,8 @@ export default async function RecallsPage() {
                   <TableHead>Booked</TableHead>
                   <TableHead>Success Rate</TableHead>
                   <TableHead>Started</TableHead>
+                  <TableHead>Actions</TableHead>
+                  <TableHead />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -193,6 +181,15 @@ export default async function RecallsPage() {
                         {campaign.started_at
                           ? new Date(campaign.started_at).toLocaleDateString()
                           : '—'}
+                      </TableCell>
+                      <TableCell>
+                        <CampaignActions campaign={{ id: campaign.id, status: campaign.status }} />
+                      </TableCell>
+                      <TableCell>
+                        <Link href={`/recalls/${campaign.id}`}
+                          className="flex items-center gap-1 text-xs text-primary hover:underline whitespace-nowrap">
+                          View <ArrowRight className="h-3 w-3" />
+                        </Link>
                       </TableCell>
                     </TableRow>
                   )

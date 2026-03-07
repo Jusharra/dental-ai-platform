@@ -77,13 +77,17 @@ export async function POST(request: NextRequest) {
 
     // Update recall campaign stats if campaign_id provided
     if (campaign_id) {
+      const isBooked = call_outcome === 'appointment_scheduled' || call_outcome === 'appointment_booked'
       await supabase.rpc('increment_campaign_contacted', { cid: campaign_id })
+      if (isBooked) {
+        await supabase.rpc('increment_campaign_booked', { cid: campaign_id })
+      }
 
       if (patient_id) {
         await supabase
           .from('recall_campaign_patients')
           .update({
-            contact_status: call_outcome === 'appointment_scheduled' ? 'booked' : 'contacted',
+            contact_status: isBooked ? 'booked' : 'contacted',
             last_contact_attempt: new Date().toISOString(),
             booked_appointment_id: appointmentId,
           })
