@@ -1,15 +1,30 @@
-import { Construction } from 'lucide-react'
+import { createServiceClient } from '@/lib/supabase/server'
+import { AdminSettingsForm } from '@/components/admin/admin-settings-form'
+import { Settings } from 'lucide-react'
 
-export default function ComingSoonPage() {
+export default async function AdminSettingsPage() {
+  const service = createServiceClient()
+  const { data: settings } = await service.from('admin_settings').select('*').single()
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-      <div className="w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center mb-4">
-        <Construction className="w-7 h-7 text-slate-400" />
+    <div className="space-y-5">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 bg-orange-500/15 rounded-xl flex items-center justify-center">
+          <Settings className="w-5 h-5 text-orange-400" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-white">Platform Settings</h1>
+          <p className="text-slate-400 text-sm">Global configuration for the Dental AI Growth System</p>
+        </div>
       </div>
-      <h1 className="text-xl font-bold text-white mb-2">Coming Soon</h1>
-      <p className="text-slate-400 text-sm max-w-xs">
-        This section is under active development and will be available shortly.
-      </p>
+
+      {settings ? (
+        <AdminSettingsForm initial={settings} />
+      ) : (
+        <p className="text-slate-400 text-sm">
+          No settings record found. Run the admin migration to create it.
+        </p>
+      )}
     </div>
   )
 }

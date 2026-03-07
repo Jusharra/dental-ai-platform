@@ -97,6 +97,8 @@ type PracticeSettings = {
   sync_frequency?: 'realtime' | '15min' | 'hourly' | 'daily'
   sync_create_missing_patients?: boolean
   sync_update_existing?: boolean
+  // Security
+  mfa_required?: boolean
 }
 
 type Profile = {
@@ -210,6 +212,17 @@ export default function SettingsPage() {
   const [billingLoading, setBillingLoading] = useState(false)
   const [billingError, setBillingError]     = useState<string | null>(null)
 
+  // Practice info (editable)
+  const [practicePhone, setPracticePhone]     = useState('')
+  const [practiceEmail, setPracticeEmail]     = useState('')
+  const [practiceAddress, setPracticeAddress] = useState('')
+  const [practiceCity, setPracticeCity]       = useState('')
+  const [practiceState, setPracticeState]     = useState('')
+  const [practiceZip, setPracticeZip]         = useState('')
+
+  // Security
+  const [mfaRequired, setMfaRequired] = useState(false)
+
   // Sync config
   const [syncAppointments, setSyncAppointments] = useState(true)
   const [syncPatients, setSyncPatients] = useState(true)
@@ -243,7 +256,16 @@ export default function SettingsPage() {
       const p = { ...data, practices } as Profile
       setProfile(p)
 
+      // Practice info
+      setPracticePhone(practices?.phone    || '')
+      setPracticeEmail(practices?.email    || '')
+      setPracticeAddress(practices?.address  || '')
+      setPracticeCity(practices?.city     || '')
+      setPracticeState(practices?.state    || '')
+      setPracticeZip(practices?.zip_code  || '')
+
       const s = practices?.settings as PracticeSettings | null
+      setMfaRequired(s?.mfa_required ?? false)
       if (!s) return
 
       setMakeInboundUrl(s.make_inbound_url || '')
@@ -376,6 +398,33 @@ export default function SettingsPage() {
     }, 'Sync settings saved', 'sync')
   }
 
+  async function handlePracticeInfoSave(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (!profile?.practice_id) return
+    setSaving('practice_info')
+    setError(null)
+    const { error: err } = await supabase
+      .from('practices')
+      .update({
+        phone:    practicePhone.trim()   || null,
+        email:    practiceEmail.trim()   || null,
+        address:  practiceAddress.trim() || null,
+        city:     practiceCity.trim()    || null,
+        state:    practiceState.trim()   || null,
+        zip_code: practiceZip.trim()     || null,
+      })
+      .eq('id', profile.practice_id)
+    if (err) setError(err.message)
+    else { showFeedback('Practice information updated'); router.refresh() }
+    setSaving(null)
+  }
+
+  async function toggleMfa() {
+    const next = !mfaRequired
+    setMfaRequired(next)
+    await saveSettings({ mfa_required: next }, next ? 'MFA enforcement enabled' : 'MFA enforcement disabled', 'mfa')
+  }
+
   async function handleManageBilling() {
     setBillingLoading(true)
     setBillingError(null)
@@ -480,23 +529,47 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Practice Information</CardTitle>
-            <CardDescription>Your practice details</CardDescription>
+            <CardDescription>Update your practice contact details</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {[
-              ['Practice Name', profile.practices.name],
-              ['Address', [profile.practices.address, profile.practices.city, profile.practices.state, profile.practices.zip_code].filter(Boolean).join(', ') || '—'],
-              ['Phone', profile.practices.phone || '—'],
-              ['Email', profile.practices.email || '—'],
-            ].map(([label, val], i, arr) => (
-              <div key={label}>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">{label}</span>
-                  <span className="text-sm font-medium">{val}</span>
-                </div>
-                {i < arr.length - 1 && <Separator className="mt-3" />}
+          <CardContent>
+            <form onSubmit={handlePracticeInfoSave} className="space-y-4">
+              <div className="space-y-2">
+                <Label>Practice Name</Label>
+                <Input value={profile.practices.name} disabled className="bg-muted/40" />
+                <p className="text-xs text-muted-foreground">Contact support to change your practice name</p>
               </div>
-            ))}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="practice_phone">Phone</Label>
+                  <Input id="practice_phone" value={practicePhone} onChange={e => setPracticePhone(e.target.value)} placeholder="+1 (555) 000-0000" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="practice_email">Email</Label>
+                  <Input id="practice_email" type="email" value={practiceEmail} onChange={e => setPracticeEmail(e.target.value)} placeholder="info@yourpractice.com" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="practice_address">Street Address</Label>
+                <Input id="practice_address" value={practiceAddress} onChange={e => setPracticeAddress(e.target.value)} placeholder="123 Main St" />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2 col-span-1">
+                  <Label htmlFor="practice_city">City</Label>
+                  <Input id="practice_city" value={practiceCity} onChange={e => setPracticeCity(e.target.value)} placeholder="New York" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="practice_state">State</Label>
+                  <Input id="practice_state" value={practiceState} onChange={e => setPracticeState(e.target.value)} placeholder="NY" maxLength={2} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="practice_zip">ZIP Code</Label>
+                  <Input id="practice_zip" value={practiceZip} onChange={e => setPracticeZip(e.target.value)} placeholder="10001" />
+                </div>
+              </div>
+              <Button type="submit" disabled={saving === 'practice_info'}>
+                {saving === 'practice_info' ? 'Saving…' : 'Save Practice Info'}
+              </Button>
+            </form>
           </CardContent>
         </Card>
       )}
@@ -979,6 +1052,45 @@ export default function SettingsPage() {
             </form>
           </CardContent>
         )}
+      </Card>
+
+      {/* ── SECURITY ─────────────────────────────────────────────────────────── */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Security</CardTitle>
+          <CardDescription>Multi-factor authentication and access controls for your practice</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-start justify-between gap-4 p-4 border rounded-lg">
+            <div>
+              <p className="text-sm font-medium">Require MFA for all users</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                When enabled, all users in your practice must set up multi-factor authentication before accessing the platform.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={toggleMfa}
+              disabled={saving === 'mfa'}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none disabled:opacity-50 ${
+                mfaRequired ? 'bg-orange-500' : 'bg-input'
+              }`}
+              role="switch"
+              aria-checked={mfaRequired}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-background shadow-lg ring-0 transition-transform ${
+                  mfaRequired ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
+          {mfaRequired && (
+            <p className="text-xs text-orange-600 bg-orange-50 border border-orange-200 rounded-lg p-3">
+              MFA enforcement is active. Users without MFA configured will be prompted to enroll on next login.
+            </p>
+          )}
+        </CardContent>
       </Card>
 
       {/* ── CHANGE PASSWORD ───────────────────────────────────────────────────── */}
