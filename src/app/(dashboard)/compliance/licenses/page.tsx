@@ -78,7 +78,7 @@ export default async function LicensesPage() {
                   return (
                     <TableRow key={license.id}>
                       <TableCell className="font-medium">
-                        {(license.users as { full_name: string })?.full_name || '—'}
+                        {(license.users as unknown as { full_name: string })?.full_name || '—'}
                       </TableCell>
                       <TableCell>{license.credential_name}</TableCell>
                       <TableCell>

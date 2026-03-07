@@ -77,8 +77,8 @@ export default async function DashboardPage() {
                   <div key={apt.id} className="flex items-center justify-between p-3 rounded-lg border">
                     <div>
                       <p className="font-medium text-sm">
-                        {(apt.patients as { first_name: string; last_name: string })?.first_name}{' '}
-                        {(apt.patients as { first_name: string; last_name: string })?.last_name}
+                        {(apt.patients as unknown as { first_name: string; last_name: string })?.first_name}{' '}
+                        {(apt.patients as unknown as { first_name: string; last_name: string })?.last_name}
                       </p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
@@ -116,8 +116,8 @@ export default async function DashboardPage() {
                   <div key={call.id} className="flex items-center justify-between p-3 rounded-lg border">
                     <div>
                       <p className="font-medium text-sm">
-                        {(call.patients as { first_name: string; last_name: string })?.first_name}{' '}
-                        {(call.patients as { first_name: string; last_name: string })?.last_name || call.phone_number}
+                        {(call.patients as unknown as { first_name: string; last_name: string })?.first_name}{' '}
+                        {(call.patients as unknown as { first_name: string; last_name: string })?.last_name || call.phone_number}
                       </p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Phone className="h-3 w-3" />

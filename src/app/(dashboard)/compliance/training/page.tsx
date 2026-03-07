@@ -73,7 +73,7 @@ export default async function TrainingPage() {
                   return (
                     <TableRow key={record.id}>
                       <TableCell className="font-medium">
-                        {(record.users as { full_name: string })?.full_name || '—'}
+                        {(record.users as unknown as { full_name: string })?.full_name || '—'}
                       </TableCell>
                       <TableCell>{record.training_name}</TableCell>
                       <TableCell>

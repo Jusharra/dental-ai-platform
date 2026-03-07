@@ -157,7 +157,7 @@ export default async function CampaignDetailPage({ params }: { params: { id: str
               </TableHeader>
               <TableBody>
                 {campaignPatients.map((cp) => {
-                  const patient = cp.patients as {
+                  const patient = cp.patients as unknown as {
                     id: string; first_name: string; last_name: string;
                     phone: string | null; email: string | null;
                     last_visit_date: string | null; recall_due_date: string | null
