@@ -40,9 +40,9 @@ export default async function AdminCRMPage({
   const inactiveStyle = `${filterBtnBase} bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-600`
 
   function filterLink(patch: Record<string, string>) {
-    const p = { ...searchParams, ...patch }
+    const p: Record<string, string> = { ...searchParams, ...patch }
     Object.keys(p).forEach(k => { if (!p[k]) delete p[k] })
-    return `/admin/crm?${new URLSearchParams(p as Record<string, string>)}`
+    return `/admin/crm?${new URLSearchParams(p)}`
   }
 
   return (
