@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
@@ -20,7 +20,6 @@ export default function ResetPasswordPage() {
   const [done, setDone] = useState(false)
   const [sessionReady, setSessionReady] = useState(false)
 
-  // Exchange the code in the URL for a session
   useEffect(() => {
     const code = searchParams.get('code')
     if (!code) {
@@ -146,5 +145,19 @@ export default function ResetPasswordPage() {
         </CardFooter>
       </form>
     </Card>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <Card>
+        <CardHeader>
+          <CardTitle>Loading…</CardTitle>
+        </CardHeader>
+      </Card>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   )
 }
