@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { buildReport, type ReportType } from '@/app/api/reports/data/route'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -23,7 +22,6 @@ export async function POST(request: NextRequest) {
   const practiceId = (profile.role === 'super_admin' && practiceIdParam) ? practiceIdParam : profile.practice_id!
   const service = createServiceClient()
 
-  const reportData = await buildReport(service, type as ReportType, practiceId, start, end)
   const { data: practice } = await service.from('practices').select('name').eq('id', practiceId).single()
   const practiceName = practice?.name ?? 'Your Practice'
 

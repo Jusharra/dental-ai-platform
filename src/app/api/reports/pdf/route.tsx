@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { buildReport, type ReportType, type ExecutiveData, type CallPerformanceData, type ConfirmationData, type RecallData, type InsuranceData } from '@/app/api/reports/data/route'
-import { renderToBuffer, Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer'
+import { buildReport, type ReportType, type ExecutiveData, type CallPerformanceData, type ConfirmationData, type RecallData, type InsuranceData } from '@/lib/reports'
+import { renderToBuffer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import React from 'react'
 
 // ─── Styles ──────────────────────────────────────────────────────────────────
@@ -302,7 +302,7 @@ export async function GET(request: NextRequest) {
   const buffer = await renderToBuffer(doc)
   const filename = `${type}-report-${start}-${end}.pdf`
 
-  return new NextResponse(buffer, {
+  return new NextResponse(buffer as unknown as BodyInit, {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="${filename}"`,

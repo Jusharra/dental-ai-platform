@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import { buildReport, type ReportType } from '@/app/api/reports/data/route'
+import { buildReport, type ReportType } from '@/lib/reports'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
