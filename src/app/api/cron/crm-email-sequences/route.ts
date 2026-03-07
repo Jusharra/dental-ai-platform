@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 const EMAIL_SCHEDULE: Record<number, { daysUntilNext: number; nextStage: string }> = {
   1: { daysUntilNext: 2,  nextStage: 'Email 2 of 9' },
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
       const subject = replaceMergeFields(template.subject_line, lead, appUrl)
       const body    = replaceMergeFields(template.body, lead, appUrl)
 
-      await resend.emails.send({
+      await getResend().emails.send({
         from: process.env.RESEND_FROM_EMAIL ?? 'shay@first-choicecyber.com',
         to: lead.email,
         subject,

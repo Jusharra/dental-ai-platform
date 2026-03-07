@@ -3,7 +3,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { buildReport, type ReportType } from '@/lib/reports'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 /**
  * Vercel Cron: runs on the 1st of each month.
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
       // Suppress unused variable warning — reportData used for future inline summary
       void reportData
 
-      await resend.emails.send({
+      await getResend().emails.send({
         from: process.env.RESEND_FROM_EMAIL ?? 'reports@firstchoicecyber.com',
         to: sub.recipient_email,
         subject: `Monthly ${label} Report — ${practiceName} (${monthLabel})`,

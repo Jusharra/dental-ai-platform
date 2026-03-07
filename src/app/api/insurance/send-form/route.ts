@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { randomBytes } from 'crypto'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: NextRequest) {
   try {
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     const formUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-insurance?token=${token}`
 
     // Send email via Resend
-    const { error: emailError } = await resend.emails.send({
+    const { error: emailError } = await getResend().emails.send({
       from: process.env.RESEND_FROM_EMAIL ?? 'noreply@firstchoicecyber.com',
       to: email,
       subject: `Insurance Verification Request — ${practiceDisplayName}`,
