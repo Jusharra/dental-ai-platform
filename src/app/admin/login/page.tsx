@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
 
         {/* Form */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4" suppressHydrationWarning>
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-lg">
                 {error}

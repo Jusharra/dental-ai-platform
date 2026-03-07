@@ -25,7 +25,10 @@ export default async function PatientsPage({
 
   let query = supabase
     .from('patients')
-    .select('*', { count: 'exact' })
+    .select(
+      'id, patient_name, first_name, last_name, phone, email, status, last_visit_date, recall_due_date, created_at',
+      { count: 'exact' }
+    )
     .eq('practice_id', practiceId)
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
@@ -60,7 +63,7 @@ export default async function PatientsPage({
           <PatientSearch />
         </CardHeader>
         <CardContent>
-          <PatientTable patients={patients || []} currentPage={page} totalPages={totalPages} />
+          <PatientTable patients={(patients || []) as any} currentPage={page} totalPages={totalPages} />
         </CardContent>
       </Card>
     </div>

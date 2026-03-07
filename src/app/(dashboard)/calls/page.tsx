@@ -23,31 +23,32 @@ export default async function CallsPage({
   const pageSize = 25
   const offset = (page - 1) * pageSize
 
-  let query = supabase
+  let callQuery = supabase
     .from('call_logs')
-    .select('*, patients(id, first_name, last_name)', { count: 'exact' })
+    .select(
+      'id, retell_call_id, call_date, call_time, phone_number, call_type, call_duration_seconds, call_outcome, transcript, recording_url, patients(id, first_name, last_name)',
+      { count: 'exact' }
+    )
     .eq('practice_id', practiceId)
     .order('created_at', { ascending: false })
     .range(offset, offset + pageSize - 1)
 
-  if (searchParams.type) {
-    query = query.eq('call_type', searchParams.type)
-  }
-  if (searchParams.outcome) {
-    query = query.eq('call_outcome', searchParams.outcome)
-  }
+  if (searchParams.type)    callQuery = callQuery.eq('call_type', searchParams.type)
+  if (searchParams.outcome) callQuery = callQuery.eq('call_outcome', searchParams.outcome)
 
-  const { data: calls } = await query
+  const today = new Date().toISOString().split('T')[0]
 
-  // Stats
+  // All 4 queries in parallel — eliminates ~200ms sequential wait
   const [
+    { data: calls },
     { count: totalCalls },
     { count: bookedCalls },
     { count: todayCalls },
   ] = await Promise.all([
+    callQuery,
     supabase.from('call_logs').select('*', { count: 'exact', head: true }).eq('practice_id', practiceId),
     supabase.from('call_logs').select('*', { count: 'exact', head: true }).eq('practice_id', practiceId).eq('call_outcome', 'appointment_booked'),
-    supabase.from('call_logs').select('*', { count: 'exact', head: true }).eq('practice_id', practiceId).eq('call_date', new Date().toISOString().split('T')[0]),
+    supabase.from('call_logs').select('*', { count: 'exact', head: true }).eq('practice_id', practiceId).eq('call_date', today),
   ])
 
   return (
