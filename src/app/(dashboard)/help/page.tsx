@@ -222,7 +222,7 @@ const FAQS: { category: string; question: string; answer: string }[] = [
     category: 'Billing & Subscription',
     question: 'What is included in each subscription tier?',
     answer:
-      'Starter ($295/mo) — Inbound AI receptionist only\nProfessional ($495/mo) — Inbound + Recall campaigns + Appointment confirmations\nEnterprise ($995/mo) — All features + priority support + custom configuration\n\nYou can view and manage your subscription under Settings → Billing.',
+      'Serenity Capture ($295/mo) — Inbound AI receptionist only\nSerenity Complete ($495/mo) — Inbound + Recall campaigns + Appointment confirmations\nSerenity Enterprise ($895/mo) — All features + priority support\n\nYou can view and manage your subscription under Settings → Billing.',
   },
   {
     category: 'Billing & Subscription',

@@ -126,13 +126,13 @@ type Profile = {
 }
 
 const BILLING_TIERS = [
-  { value: 'starter',      label: 'Serenity Capture',  price: '$295/mo' },
-  { value: 'professional', label: 'Serenity Complete',  price: '$495/mo' },
-  { value: 'enterprise',   label: 'Enterprise',          price: 'Custom'  },
+  { value: 'starter',      label: 'Serenity Capture',    price: '$295/mo' },
+  { value: 'professional', label: 'Serenity Complete',   price: '$495/mo' },
+  { value: 'enterprise',   label: 'Serenity Enterprise', price: '$895/mo' },
 ]
 
 const TIER_LABEL: Record<string, string> = {
-  starter: 'Serenity Capture', professional: 'Serenity Complete', enterprise: 'Enterprise',
+  starter: 'Serenity Capture', professional: 'Serenity Complete', enterprise: 'Serenity Enterprise',
 }
 
 const STATUS_COLOR: Record<string, string> = {

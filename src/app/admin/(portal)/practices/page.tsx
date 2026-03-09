@@ -45,7 +45,7 @@ export default async function AdminPracticesPage({
     return (arr ?? []).filter(r => r.practice_id === id).length
   }
 
-  const TIER_MRR: Record<string, number> = { starter: 295, professional: 495, enterprise: 995 }
+  const TIER_MRR: Record<string, number> = { starter: 295, professional: 495, enterprise: 895 }
   const totalMRR = rows
     .filter(p => p.subscription_status === 'active')
     .reduce((s, p) => s + (p.mrr || TIER_MRR[p.subscription_tier ?? ''] || 0), 0)

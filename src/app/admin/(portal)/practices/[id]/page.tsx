@@ -58,11 +58,11 @@ export default async function AdminPracticeDetailPage({ params }: { params: { id
     new Date(c.call_date) >= new Date(new Date().setDate(1))
   )
 
-  const TIER_MRR: Record<string, number> = { starter: 295, professional: 495, enterprise: 995 }
+  const TIER_MRR: Record<string, number> = { starter: 295, professional: 495, enterprise: 895 }
   const mrr = practice.mrr || TIER_MRR[practice.subscription_tier ?? ''] || 0
 
   const tierLabel: Record<string, string> = {
-    starter: 'Serenity Capture', professional: 'Serenity Complete', enterprise: 'Enterprise',
+    starter: 'Serenity Capture', professional: 'Serenity Complete', enterprise: 'Serenity Enterprise',
   }
 
   return (

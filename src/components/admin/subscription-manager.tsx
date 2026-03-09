@@ -6,7 +6,7 @@ import { CreditCard, ExternalLink, Copy, Check, RefreshCw } from 'lucide-react'
 const TIERS = [
   { value: 'starter',      label: 'Serenity Capture',   price: '$295/mo' },
   { value: 'professional', label: 'Serenity Complete',   price: '$495/mo' },
-  { value: 'enterprise',   label: 'Enterprise',          price: 'Custom'  },
+  { value: 'enterprise',   label: 'Serenity Enterprise', price: '$895/mo' },
 ]
 
 const STATUS_STYLES: Record<string, string> = {

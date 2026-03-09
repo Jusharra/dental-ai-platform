@@ -11,7 +11,7 @@ import {
 const TIER_MRR: Record<string, number> = {
   starter:      295,
   professional: 495,
-  enterprise:   995,
+  enterprise:   895,
 }
 
 export default async function AdminDashboardPage() {

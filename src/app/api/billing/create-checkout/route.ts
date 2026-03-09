@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     .single()
 
   if (!profile?.practice_id) return NextResponse.json({ error: 'No practice' }, { status: 400 })
-  if (!['practice_owner', 'manager'].includes(profile.role)) {
+  if (!['practice_owner', 'manager', 'admin'].includes(profile.role)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
