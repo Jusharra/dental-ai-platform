@@ -4,6 +4,9 @@ import { UserActionsCell } from '@/components/admin/user-actions-cell'
 import { PracticeFilterSelect } from '@/components/admin/practice-filter-select'
 import { Users } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function AdminUsersPage({
   searchParams,
 }: {

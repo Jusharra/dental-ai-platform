@@ -9,20 +9,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/admin/login')
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role, full_name')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'super_admin') redirect('/dashboard')
-
-  // Check for active impersonation session
+  const service = createServiceClient()
   const cookieStore = cookies()
   const impersonatingId = cookieStore.get('admin_impersonating')?.value ?? null
 
-  const service = createServiceClient()
+  // Run profile + ticket count in parallel
+  const [{ data: profile }, { count: openTicketCount }] = await Promise.all([
+    supabase.from('users').select('role, full_name').eq('id', user.id).single(),
+    service.from('support_tickets').select('*', { count: 'exact', head: true }).eq('status', 'open'),
+  ])
 
+  if (profile?.role !== 'super_admin') redirect('/dashboard')
+
+  // Impersonation name lookup (conditional — only when cookie is set)
   let impersonatedPracticeName: string | null = null
   if (impersonatingId) {
     const { data: practice } = await service
@@ -32,11 +31,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       .single()
     impersonatedPracticeName = practice?.name ?? null
   }
-
-  const { count: openTicketCount } = await service
-    .from('support_tickets')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'open')
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-950">

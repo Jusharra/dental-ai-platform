@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { LeadDetailTabs } from '@/components/admin/crm/lead-detail-tabs'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function LeadDetailPage({ params }: { params: { id: string } }) {
   const service = createServiceClient()
 

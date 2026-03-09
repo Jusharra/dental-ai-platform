@@ -6,6 +6,9 @@ import { PatientSearch } from '@/components/patients/patient-search'
 import { PatientTable } from '@/components/patients/patient-table'
 import { AddPatientDialog } from '@/components/patients/add-patient-dialog'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function PatientsPage({
   searchParams,
 }: {

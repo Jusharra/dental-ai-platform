@@ -5,6 +5,9 @@ import { Badge } from '@/components/ui/badge'
 import { FileText, Handshake, GraduationCap, Award, AlertTriangle, ClipboardList, Beaker, AlertOctagon } from 'lucide-react'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function CompliancePage() {
   const profile = await getUserProfile()
   const practiceId = profile?.practice_id

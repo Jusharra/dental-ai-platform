@@ -4,6 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Phone, Users, Calendar, TrendingUp } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
+
 function StatBar({ label, value, total, color = 'bg-primary' }: {
   label: string
   value: number

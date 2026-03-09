@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { CheckCircle, Clock, AlertCircle, CreditCard, ArrowRight } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function InsurancePage() {
   const supabase = createClient()
 

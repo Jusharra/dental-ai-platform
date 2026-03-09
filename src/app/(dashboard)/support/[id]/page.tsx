@@ -9,6 +9,9 @@ import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
+
 const STATUS_BADGE: Record<string, string> = {
   open:        'bg-blue-100 text-blue-700 border-blue-200',
   in_progress: 'bg-amber-100 text-amber-700 border-amber-200',

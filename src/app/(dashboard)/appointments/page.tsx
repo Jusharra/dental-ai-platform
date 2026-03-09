@@ -9,6 +9,9 @@ import { AddAppointmentDialog } from '@/components/appointments/add-appointment-
 import { AppointmentActions } from '@/components/appointments/appointment-actions'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function AppointmentsPage({
   searchParams,
 }: {

@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Building2, ArrowRight, CheckCircle, Plug } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function AdminPracticesPage({
   searchParams,
 }: {

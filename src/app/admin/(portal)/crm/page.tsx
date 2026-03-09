@@ -2,6 +2,9 @@ import { createServiceClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { ArrowRight, Plus, Users2 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function AdminCRMPage({
   searchParams,
 }: {

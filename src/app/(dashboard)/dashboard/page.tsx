@@ -4,6 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Phone, Users, AlertTriangle, Clock } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function DashboardPage() {
   const profile = await getUserProfile()
   const practiceId = profile?.practice_id

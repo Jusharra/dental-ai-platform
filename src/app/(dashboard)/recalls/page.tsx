@@ -8,6 +8,9 @@ import { CampaignActions } from '@/components/recalls/campaign-actions'
 import { Megaphone, Users, CalendarCheck, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
+
 const statusColors: Record<string, string> = {
   draft:     'text-muted-foreground',
   active:    'text-green-600',

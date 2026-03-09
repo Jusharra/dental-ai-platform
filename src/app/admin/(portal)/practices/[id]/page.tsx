@@ -9,6 +9,9 @@ import { ImpersonateButton } from '@/components/admin/impersonate-button'
 import { PracticeStatusForm } from '@/components/admin/practice-status-form'
 import { SubscriptionManager } from '@/components/admin/subscription-manager'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function AdminPracticeDetailPage({ params }: { params: { id: string } }) {
   const service = createServiceClient()
 

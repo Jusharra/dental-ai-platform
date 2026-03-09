@@ -3,9 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import {
+
   Building2, Users, Phone, TrendingUp, AlertTriangle,
   CheckCircle, Clock, ArrowRight, Activity,
 } from 'lucide-react'
+
+export const dynamic = 'force-dynamic'
 
 // MRR lookup by tier
 const TIER_MRR: Record<string, number> = {

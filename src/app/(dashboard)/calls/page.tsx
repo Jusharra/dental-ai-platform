@@ -8,6 +8,9 @@ import Link from 'next/link'
 import { CallFilters } from '@/components/calls/call-filters'
 import { CallTranscriptDialog } from '@/components/calls/call-transcript-dialog'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function CallsPage({
   searchParams,
 }: {

@@ -4,6 +4,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
+
 const STATUS_BADGE: Record<string, string> = {
   open:        'bg-blue-500/10 text-blue-400 border-blue-500/20',
   in_progress: 'bg-amber-500/10 text-amber-400 border-amber-500/20',

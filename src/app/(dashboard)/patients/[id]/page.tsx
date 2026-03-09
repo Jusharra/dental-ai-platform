@@ -10,6 +10,9 @@ import { ArrowLeft, Phone, Mail, MapPin, Calendar, Clock } from 'lucide-react'
 import { EditPatientDialog } from '@/components/patients/edit-patient-dialog'
 import { InsurancePanel } from '@/components/patients/insurance-panel'
 
+export const dynamic = 'force-dynamic'
+
+
 export default async function PatientDetailPage({
   params,
 }: {

@@ -8,6 +8,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { CampaignActions } from '@/components/recalls/campaign-actions'
 import { ArrowLeft, Users, CalendarCheck, Phone, Clock } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
+
 const contactStatusColors: Record<string, string> = {
   pending:     'bg-slate-100 text-slate-600',
   contacted:   'bg-blue-100 text-blue-700',
