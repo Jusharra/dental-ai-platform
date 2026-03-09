@@ -28,6 +28,7 @@ import {
   Megaphone,
   CreditCard,
   MessageSquare,
+  BookOpen,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -40,6 +41,7 @@ const navigation = [
   { name: 'Recall Campaigns', href: '/recalls', icon: Megaphone },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Reports', href: '/reports', icon: FileText },
+  { name: 'Help Center', href: '/help', icon: BookOpen },
   { name: 'Support', href: '/support', icon: MessageSquare },
 ]
 
