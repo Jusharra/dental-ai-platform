@@ -1,178 +1,105 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { verifyWebhook } from '@/lib/webhook-verify'
 
-/**
- * Inbound Call Webhook
- * 
- * Receives data from Make.com when an inbound call completes
- * 
- * Payload example:
- * {
- *   "call_id": "retell_abc123",
- *   "practice_id": "uuid",
- *   "patient_phone": "+1234567890",
- *   "patient_name": "John Doe",
- *   "call_duration": 180,
- *   "call_outcome": "appointment_booked",
- *   "appointment_date": "2026-03-15",
- *   "appointment_time": "10:00 AM",
- *   "provider_name": "Dr. Smith",
- *   "transcript": "Full call transcript...",
- *   "recording_url": "https://..."
- * }
- */
 export async function POST(request: NextRequest) {
   try {
-    // 1. Verify webhook secret
-    const secret = request.headers.get('x-webhook-secret')
-    if (secret !== process.env.WEBHOOK_SECRET) {
-      console.error('Invalid webhook secret')
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const body = await request.json()
+
+    // Per-practice verification + subscription gating
+    const result = await verifyWebhook(request, 'inbound', body.practice_id)
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error, code: result.code }, { status: result.status })
     }
 
-    // 2. Parse payload
-    const payload = await request.json()
-    console.log('Inbound webhook received:', {
-      call_id: payload.call_id,
-      practice_id: payload.practice_id,
-      outcome: payload.call_outcome,
-    })
+    const { practice_id, patient_phone, patient_name, call_id, call_outcome,
+            appointment_date, appointment_time, provider_name,
+            transcript, recording_url, call_duration, call_cost } = body
 
-    // call_cost is in USD from Retell (e.g. 0.05 = 5 cents)
-    const retellCostCents = payload.call_cost
-      ? Math.round(payload.call_cost * 100)
-      : 0
-
-    // 3. Validate required fields
-    if (!payload.practice_id || !payload.patient_phone) {
-      return NextResponse.json(
-        { error: 'Missing required fields: practice_id, patient_phone' },
-        { status: 400 }
-      )
+    if (!practice_id || !patient_phone) {
+      return NextResponse.json({ error: 'Missing required fields: practice_id, patient_phone' }, { status: 400 })
     }
 
-    // 4. Create Supabase client with service role (bypasses RLS)
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    )
+    const retellCostCents = call_cost ? Math.round(call_cost * 100) : 0
+    const supabase = createServiceClient()
 
-    // 5. Find or create patient
+    // Find or create patient
     let patient
     const { data: existingPatient } = await supabase
       .from('patients')
-      .select('*')
-      .eq('phone', payload.patient_phone)
-      .eq('practice_id', payload.practice_id)
+      .select('id')
+      .eq('phone', patient_phone)
+      .eq('practice_id', practice_id)
       .single()
 
     if (existingPatient) {
-      // Update existing patient
-      const { data: updatedPatient } = await supabase
+      await supabase
         .from('patients')
-        .update({
-          last_contact_date: new Date().toISOString().split('T')[0],
-        })
+        .update({ last_contact_date: new Date().toISOString().split('T')[0] })
         .eq('id', existingPatient.id)
-        .select()
-        .single()
-
-      patient = updatedPatient
-      console.log('Updated existing patient:', patient?.id)
+      patient = existingPatient
     } else {
-      // Create new patient
       const { data: newPatient, error: patientError } = await supabase
         .from('patients')
         .insert({
-          practice_id: payload.practice_id,
-          patient_name: payload.patient_name || 'Unknown',
-          phone: payload.patient_phone,
+          practice_id,
+          patient_name: patient_name || 'Unknown',
+          phone: patient_phone,
           status: 'active',
           last_contact_date: new Date().toISOString().split('T')[0],
         })
-        .select()
+        .select('id')
         .single()
 
       if (patientError) {
-        console.error('Error creating patient:', patientError)
-        return NextResponse.json(
-          { error: 'Failed to create patient' },
-          { status: 500 }
-        )
+        return NextResponse.json({ error: 'Failed to create patient' }, { status: 500 })
       }
-
       patient = newPatient
-      console.log('Created new patient:', patient?.id)
     }
 
-    // 6. Create appointment if booked
+    // Create appointment if booked
     let appointmentId = null
-    if (payload.call_outcome === 'appointment_booked' && patient) {
-      const { data: appointment, error: appointmentError } = await supabase
+    if (call_outcome === 'appointment_booked' && patient && appointment_date) {
+      const { data: appointment } = await supabase
         .from('appointments')
         .insert({
-          practice_id: payload.practice_id,
+          practice_id,
           patient_id: patient.id,
-          provider_name: payload.provider_name || 'TBD',
-          appointment_date: payload.appointment_date,
-          appointment_time: payload.appointment_time || '00:00:00',
+          provider_name: provider_name || 'TBD',
+          appointment_date,
+          appointment_time: appointment_time || '00:00:00',
           duration_minutes: 60,
           procedure_type: 'general',
           status: 'scheduled',
           confirmation_status: 'pending',
         })
-        .select()
+        .select('id')
         .single()
 
-      if (appointmentError) {
-        console.error('Error creating appointment:', appointmentError)
-      } else {
-        appointmentId = appointment?.id
-        console.log('Created appointment:', appointmentId)
-      }
+      appointmentId = appointment?.id ?? null
     }
 
-    // 7. Log the call
-    const { error: logError } = await supabase.from('call_logs').insert({
-      practice_id: payload.practice_id,
-      patient_id: patient?.id,
-      appointment_id: appointmentId,
-      call_type: 'inbound',
-      retell_call_id: payload.call_id,
-      phone_number: payload.patient_phone,
-      call_date: new Date().toISOString().split('T')[0],
-      call_time: new Date().toISOString().split('T')[1].split('.')[0],
-      call_duration_seconds: payload.call_duration || 0,
-      call_outcome: payload.call_outcome || 'other',
-      retell_cost_cents: retellCostCents,
-      transcript: payload.transcript,
-      recording_url: payload.recording_url,
-      agent_type: 'inbound_receptionist',
+    // Log the call
+    await supabase.from('call_logs').insert({
+      practice_id,
+      patient_id:            patient?.id,
+      appointment_id:        appointmentId,
+      call_type:             'inbound',
+      retell_call_id:        call_id,
+      phone_number:          patient_phone,
+      call_date:             new Date().toISOString().split('T')[0],
+      call_time:             new Date().toISOString().split('T')[1].split('.')[0],
+      call_duration_seconds: call_duration || 0,
+      call_outcome:          call_outcome || 'other',
+      retell_cost_cents:     retellCostCents,
+      transcript:            transcript ?? null,
+      recording_url:         recording_url ?? null,
+      agent_type:            'inbound_receptionist',
     })
 
-    if (logError) {
-      console.error('Error logging call:', logError)
-    } else {
-      console.log('Call logged successfully')
-    }
-
-    // 8. Return success
-    return NextResponse.json({
-      success: true,
-      patient_id: patient?.id,
-      appointment_id: appointmentId,
-    })
+    return NextResponse.json({ success: true, patient_id: patient?.id, appointment_id: appointmentId })
   } catch (error) {
-    console.error('Webhook error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('Inbound webhook error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
