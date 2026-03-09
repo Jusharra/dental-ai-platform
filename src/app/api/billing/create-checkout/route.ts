@@ -17,9 +17,6 @@ export async function POST(request: NextRequest) {
     .single()
 
   if (!profile?.practice_id) return NextResponse.json({ error: 'No practice' }, { status: 400 })
-  if (!['practice_owner', 'manager', 'admin'].includes(profile.role)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  }
 
   const { tier } = await request.json()
   const priceId  = TIER_PRICE_MAP[tier ?? 'starter']
