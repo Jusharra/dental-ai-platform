@@ -19,7 +19,7 @@ const individualPlans = [
     name: 'Serenity Capture',
     badge: 'Most Flexible',
     badgeIcon: Zap,
-    price: '$295',
+    price: '$495',
     period: '/month',
     description: 'Best for overflow, after-hours, or practices not ready for integration',
     features: [
@@ -38,7 +38,7 @@ const individualPlans = [
     name: 'Serenity Core',
     badge: 'Most Popular',
     badgeIcon: Star,
-    price: '$195',
+    price: '$295',
     period: '/month',
     description: 'Best for lower-volume practices or teams easing into automation',
     features: [
@@ -59,7 +59,7 @@ const individualPlans = [
     name: 'Serenity Complete',
     badge: 'Best Value',
     badgeIcon: Crown,
-    price: '$495',
+    price: '$895',
     period: '/month',
     description: 'Best for established or higher-volume practices',
     features: [
