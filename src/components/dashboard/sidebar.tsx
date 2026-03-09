@@ -27,6 +27,7 @@ import {
   AlertOctagon,
   Megaphone,
   CreditCard,
+  MessageSquare,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -39,6 +40,7 @@ const navigation = [
   { name: 'Recall Campaigns', href: '/recalls', icon: Megaphone },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Reports', href: '/reports', icon: FileText },
+  { name: 'Support', href: '/support', icon: MessageSquare },
 ]
 
 const complianceNav = [

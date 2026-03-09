@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
   LayoutDashboard, Building2, Users, FileText,
-  Settings, LogOut, Shield, Menu, X, BarChart3, Users2,
+  Settings, LogOut, Shield, Menu, X, BarChart3, Users2, MessageSquare,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -17,13 +17,14 @@ const nav = [
   { name: 'Practices',  href: '/admin/practices',   icon: Building2       },
   { name: 'Users',      href: '/admin/users',       icon: Users           },
   { name: 'CRM',        href: '/admin/crm',         icon: Users2          },
+  { name: 'Support',    href: '/admin/support',     icon: MessageSquare   },
   { name: 'Reports',    href: '/admin/reports',     icon: BarChart3       },
   { name: 'Audit Logs', href: '/admin/audit-logs',  icon: FileText        },
   { name: 'Security',   href: '/admin/security',    icon: Shield          },
   { name: 'Settings',   href: '/admin/settings',    icon: Settings        },
 ]
 
-export function AdminSidebar({ adminName }: { adminName: string }) {
+export function AdminSidebar({ adminName, openTicketCount = 0 }: { adminName: string; openTicketCount?: number }) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -52,6 +53,7 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
         <div className="space-y-0.5">
           {nav.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + '/')
+            const badge  = item.href === '/admin/support' && openTicketCount > 0 ? openTicketCount : null
             return (
               <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>
                 <span className={cn(
@@ -61,7 +63,12 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 )}>
                   <item.icon className="h-4 w-4 shrink-0" />
-                  {item.name}
+                  <span className="flex-1">{item.name}</span>
+                  {badge !== null && (
+                    <span className="ml-auto bg-orange-500 text-white text-[10px] font-bold leading-none px-1.5 py-0.5 rounded-full">
+                      {badge}
+                    </span>
+                  )}
                 </span>
               </Link>
             )

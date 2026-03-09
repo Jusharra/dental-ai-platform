@@ -21,9 +21,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const cookieStore = cookies()
   const impersonatingId = cookieStore.get('admin_impersonating')?.value ?? null
 
+  const service = createServiceClient()
+
   let impersonatedPracticeName: string | null = null
   if (impersonatingId) {
-    const service = createServiceClient()
     const { data: practice } = await service
       .from('practices')
       .select('name')
@@ -32,9 +33,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     impersonatedPracticeName = practice?.name ?? null
   }
 
+  const { count: openTicketCount } = await service
+    .from('support_tickets')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'open')
+
   return (
     <div className="flex h-screen overflow-hidden bg-slate-950">
-      <AdminSidebar adminName={profile.full_name} />
+      <AdminSidebar adminName={profile.full_name} openTicketCount={openTicketCount ?? 0} />
       <div className="flex-1 flex flex-col overflow-hidden">
         {impersonatedPracticeName && (
           <ImpersonationBanner practiceName={impersonatedPracticeName} />

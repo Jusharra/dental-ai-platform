@@ -981,7 +981,7 @@ export default function SettingsPage() {
           <div className="space-y-1.5">
             <p className="text-sm font-medium">Practice ID</p>
             <p className="text-xs text-muted-foreground">
-              Include as <code className="bg-muted px-1 rounded">practice_id</code> in every Make.com HTTP request body
+              Add as header <code className="bg-muted px-1 rounded">x-practice-id</code> in every Make.com HTTP module
             </p>
             <div className="flex items-center gap-2 bg-muted rounded-md px-3 py-2">
               <code className="text-xs flex-1">{profile.practice_id}</code>
@@ -992,7 +992,7 @@ export default function SettingsPage() {
           <div className="space-y-1.5">
             <p className="text-sm font-medium">Webhook Secret</p>
             <p className="text-xs text-muted-foreground">
-              Add as header <code className="bg-muted px-1 rounded">x-webhook-secret</code> in every Make.com HTTP request
+              Add as header <code className="bg-muted px-1 rounded">x-webhook-secret</code> in every Make.com HTTP module
             </p>
             <div className="flex items-center gap-2 bg-muted rounded-md px-3 py-2">
               <code className="text-xs flex-1">
