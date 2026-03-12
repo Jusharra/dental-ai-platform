@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Dental Patient Operations & Compliance Platform',
+  title: 'PatientGuard AI',
   description: 'AI-powered patient operations and compliance infrastructure for dental practices.',
 }
 

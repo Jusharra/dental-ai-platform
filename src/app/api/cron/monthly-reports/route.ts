@@ -72,12 +72,12 @@ export async function GET(request: NextRequest) {
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
             <div style="background: #0f172a; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-              <p style="color: #94a3b8; font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase;">Dental Patient Operations &amp; Compliance Platform</p>
+              <p style="color: #94a3b8; font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase;">PatientGuard AI</p>
               <h1 style="color: #fff; font-size: 22px; margin: 0;">Your Monthly ${label} Report</h1>
               <p style="color: #64748b; margin: 4px 0 0;">${practiceName} · ${monthLabel}</p>
             </div>
             <p style="color: #374151;">Your <strong>${monthLabel}</strong> report is attached.</p>
-            <p style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Dental Patient Operations &amp; Compliance Platform. Confidential.</p>
+            <p style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} PatientGuard AI. Confidential.</p>
           </div>
         `,
         attachments: [{

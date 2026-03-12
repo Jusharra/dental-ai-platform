@@ -30,7 +30,7 @@ const solutions = [
     icon: Building2,
     segment: 'Group Practices',
     headline: 'Standardize operations across every provider and location.',
-    body: 'Group practices face the challenge of consistency — different providers, different schedules, and multiple front desk staff. The Dental Patient Operations & Compliance Platform centralizes patient communication and compliance management under one platform.',
+    body: 'Group practices face the challenge of consistency — different providers, different schedules, and multiple front desk staff. PatientGuard AI centralizes patient communication and compliance management under one platform.',
     features: [
       'Multi-provider scheduling logic',
       'Role-based staff access',

@@ -26,10 +26,12 @@ export function MarketingNav() {
 
   useEffect(() => setOpen(false), [pathname])
 
+  const dark = scrolled || open
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || open ? 'bg-slate-950/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+        dark ? 'bg-slate-950/95 backdrop-blur-md shadow-lg' : 'bg-white/90 backdrop-blur-sm shadow-sm'
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,11 +42,11 @@ export function MarketingNav() {
               <Activity className="w-4 h-4 text-white" />
             </div>
             <div className="leading-snug">
-              <span className="text-white font-bold text-[11px] tracking-tight block">
-                Dental Patient Operations
+              <span className={`font-bold text-sm tracking-tight block ${dark ? 'text-white' : 'text-slate-900'}`}>
+                PatientGuard AI
               </span>
-              <span className="text-white font-bold text-[11px] tracking-tight block">
-                &amp; Compliance Platform
+              <span className={`text-[9px] tracking-wide block ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
+                Dental Patient Operations &amp; Compliance Platform
               </span>
             </div>
           </Link>
@@ -57,8 +59,10 @@ export function MarketingNav() {
                 href={l.href}
                 className={`text-sm font-medium transition-colors ${
                   pathname === l.href
-                    ? 'text-orange-400'
-                    : 'text-slate-300 hover:text-white'
+                    ? 'text-orange-500'
+                    : dark
+                      ? 'text-slate-300 hover:text-white'
+                      : 'text-slate-700 hover:text-slate-900'
                 }`}
               >
                 {l.label}
@@ -70,7 +74,7 @@ export function MarketingNav() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/login"
-              className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              className={`text-sm font-medium transition-colors ${dark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'}`}
             >
               Sign In
             </Link>
@@ -84,7 +88,7 @@ export function MarketingNav() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-slate-300 hover:text-white p-2"
+            className={`md:hidden p-2 ${dark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900'}`}
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >

@@ -174,7 +174,7 @@ export default function HomePage() {
               One platform. Complete automation.
             </motion.h2>
             <motion.p variants={fadeUp} className="text-lg text-slate-500 max-w-2xl mx-auto">
-              From the first patient call to full compliance documentation, the Dental Patient Operations & Compliance Platform handles the operational work so your team can focus on care.
+              From the first patient call to full compliance documentation, PatientGuard AI handles the operational work so your team can focus on care.
             </motion.p>
           </motion.div>
 
@@ -219,7 +219,7 @@ export default function HomePage() {
               Set up in hours. Runs forever.
             </motion.h2>
             <motion.p variants={fadeUp} className="text-lg text-slate-400 max-w-2xl mx-auto">
-              The Dental Patient Operations & Compliance Platform integrates with your existing tools and starts handling patient communications from day one.
+              PatientGuard AI integrates with your existing tools and starts handling patient communications from day one.
             </motion.p>
           </motion.div>
 
@@ -273,7 +273,7 @@ export default function HomePage() {
           >
             {[
               { icon: Clock, title: 'Zero Hold Times', desc: 'Serenity picks up every call instantly — no queues, no missed calls, no after-hours voicemails.' },
-              { icon: Users, title: 'Works for Every Practice', desc: 'Whether you are a solo dentist or a multi-site DSO, the Dental Patient Operations & Compliance Platform scales to match your patient volume.' },
+              { icon: Users, title: 'Works for Every Practice', desc: 'Whether you are a solo dentist or a multi-site DSO, PatientGuard AI scales to match your patient volume.' },
               { icon: Star, title: 'Enterprise-Grade Security', desc: 'SOC 2-ready infrastructure, encrypted PHI storage, and a full HIPAA Business Associate Agreement included.' },
             ].map((item) => (
               <motion.div key={item.title} variants={fadeUp} className="flex gap-4">
@@ -339,7 +339,7 @@ export default function HomePage() {
               Ready to grow your practice with AI?
             </motion.h2>
             <motion.p variants={fadeUp} className="text-orange-100 text-lg mb-8">
-              Join dental practices already using the Dental Patient Operations & Compliance Platform to reduce front desk burden and never miss a patient call.
+              Join dental practices already using PatientGuard AI to reduce front desk burden and never miss a patient call.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-4">
               <Link

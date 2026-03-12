@@ -26,7 +26,7 @@ export default function MfaSetupPage() {
     setError(null)
     const { data, error: enrollError } = await supabase.auth.mfa.enroll({
       factorType: 'totp',
-      issuer: 'Dental Patient Ops',
+      issuer: 'PatientGuard AI',
     })
     if (enrollError || !data) {
       setError(enrollError?.message ?? 'Failed to start enrollment')

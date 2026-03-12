@@ -45,7 +45,8 @@ export default function AdminLoginPage() {
             <Shield className="w-7 h-7 text-orange-500" />
           </div>
           <h1 className="text-xl font-bold text-white">Admin Portal</h1>
-          <p className="text-slate-400 text-sm mt-1">Dental Patient Operations &amp; Compliance Platform</p>
+          <p className="text-slate-300 text-sm mt-1 font-medium">PatientGuard AI</p>
+          <p className="text-slate-500 text-xs mt-0.5">Dental Patient Operations &amp; Compliance Platform</p>
         </div>
 
         {/* Form */}

@@ -86,7 +86,7 @@ export default function ContactPage() {
               </motion.div>
 
               <motion.div variants={fadeUp} className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
-                <p className="font-bold text-slate-900 text-sm mb-1">Dental Patient Operations & Compliance Platform</p>
+                <p className="font-bold text-slate-900 text-sm mb-1">PatientGuard AI</p>
                 <p className="text-slate-500 text-sm leading-relaxed">
                   We build compliant, AI-driven technology for healthcare-adjacent industries. Powered by Serenity, our flagship dental practice automation platform.
                 </p>

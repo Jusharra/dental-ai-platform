@@ -31,8 +31,8 @@ export function MarketingFooter() {
                 <Activity className="w-4 h-4 text-white" />
               </div>
               <div className="leading-snug">
-                <span className="text-white font-bold text-[11px] block">Dental Patient Operations</span>
-                <span className="text-white font-bold text-[11px] block">&amp; Compliance Platform</span>
+                <span className="text-white font-bold text-sm block">PatientGuard AI</span>
+                <span className="text-slate-400 text-[10px] block">Dental Patient Operations &amp; Compliance Platform</span>
               </div>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed mb-4">
@@ -95,7 +95,7 @@ export function MarketingFooter() {
 
         <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-500 text-sm">
-            © {new Date().getFullYear()} Dental Patient Operations &amp; Compliance Platform. All rights reserved.
+            © {new Date().getFullYear()} PatientGuard AI. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-slate-500">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
