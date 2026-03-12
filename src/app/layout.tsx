@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Dental AI Platform',
-  description: 'HIPAA-Compliant Dental AI Automation & Compliance Platform',
+  title: 'PracticeGuard AI',
+  description: 'Automated Patient Operations & Compliance Infrastructure for Dental Practices',
 }
 
 export default function RootLayout({

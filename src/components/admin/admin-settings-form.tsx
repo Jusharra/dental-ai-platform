@@ -58,7 +58,7 @@ export function AdminSettingsForm({ initial }: { initial: AdminSettings }) {
   const [error,  setError]  = useState<string | null>(null)
 
   // Platform identity
-  const [platformName, setPlatformName]   = useState(initial.platform_name  ?? 'Dental AI Growth System')
+  const [platformName, setPlatformName]   = useState(initial.platform_name  ?? 'PracticeGuard AI')
   const [companyName,  setCompanyName]    = useState(initial.company_name   ?? 'First-Choice Cyber')
   const [platformUrl,  setPlatformUrl]    = useState(initial.platform_url   ?? '')
   const [supportEmail, setSupportEmail]   = useState(initial.support_email  ?? '')
@@ -119,7 +119,7 @@ export function AdminSettingsForm({ initial }: { initial: AdminSettings }) {
           className="space-y-3"
         >
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Platform Name"  id="platform_name"  value={platformName}  onChange={setPlatformName}  placeholder="Dental AI Growth System" />
+            <Field label="Platform Name"  id="platform_name"  value={platformName}  onChange={setPlatformName}  placeholder="PracticeGuard AI" />
             <Field label="Company Name"   id="company_name"   value={companyName}   onChange={setCompanyName}   placeholder="First-Choice Cyber" />
           </div>
           <Field label="Platform URL"   id="platform_url"   value={platformUrl}   onChange={setPlatformUrl}   placeholder="https://your-app.vercel.app" type="url" />
@@ -138,7 +138,7 @@ export function AdminSettingsForm({ initial }: { initial: AdminSettings }) {
           <Field label="Resend API Key" id="resend_key"  value={resendKey}  onChange={setResendKey}  placeholder="re_xxxxxxxxxxxx" hint="Get from resend.com/api-keys" />
           <div className="grid grid-cols-2 gap-3">
             <Field label="From Email"   id="from_email" value={fromEmail}  onChange={setFromEmail}  placeholder="noreply@yourdomain.com" type="email" />
-            <Field label="From Name"    id="from_name"  value={fromName}   onChange={setFromName}   placeholder="Dental AI Growth System" />
+            <Field label="From Name"    id="from_name"  value={fromName}   onChange={setFromName}   placeholder="PracticeGuard AI" />
           </div>
           <SaveButton section="email" />
         </form>

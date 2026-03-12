@@ -57,7 +57,7 @@ export async function updateSession(request: NextRequest) {
       url.pathname = '/dashboard'
       return NextResponse.redirect(url)
     }
-    return supabaseResponse
+    // MFA check for admin paths (handled below — fall through)
   }
 
   // ── /admin/login — authenticated super_admin → skip to admin dashboard ───────
@@ -93,6 +93,44 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)
+  }
+
+  // ── MFA Enforcement (all authenticated, non-public, non-MFA paths) ───────────
+  // Skip MFA check on: public paths, the MFA pages themselves, API routes
+  const skipMfa = isPublic || pathname.startsWith('/mfa/')
+  if (!skipMfa && user) {
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+
+    if (aal?.nextLevel === 'aal2' && aal.currentLevel === 'aal1') {
+      // User has MFA enrolled but hasn't verified this session → require challenge
+      const url = request.nextUrl.clone()
+      url.pathname = '/mfa/verify'
+      url.searchParams.set('next', pathname)
+      return NextResponse.redirect(url)
+    }
+
+    if (aal?.currentLevel === 'aal1' && aal.nextLevel === 'aal1') {
+      // No MFA factor enrolled — check grace period
+      const { data: profile } = await supabase
+        .from('users')
+        .select('mfa_grace_period_ends')
+        .eq('id', user.id)
+        .single()
+
+      const gracePeriodEnds = profile?.mfa_grace_period_ends
+        ? new Date(profile.mfa_grace_period_ends)
+        : null
+
+      if (!gracePeriodEnds || gracePeriodEnds <= new Date()) {
+        // Grace period expired — force MFA setup
+        const url = request.nextUrl.clone()
+        url.pathname = '/mfa/setup'
+        return NextResponse.redirect(url)
+      }
+
+      // Within grace period — pass end date to the app via header for the banner
+      supabaseResponse.headers.set('x-mfa-grace-ends', gracePeriodEnds.toISOString())
+    }
   }
 
   return supabaseResponse

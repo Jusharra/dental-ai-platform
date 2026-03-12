@@ -791,7 +791,7 @@ export default function SettingsPage() {
                 )}
               </CardTitle>
               <CardDescription>
-                Control what data syncs between your PMS and the Dental AI Growth System.
+                Control what data syncs between your PMS and the PracticeGuard AI.
               </CardDescription>
             </div>
           </div>

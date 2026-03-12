@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { decryptJson } from '@/lib/encryption'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -29,6 +30,11 @@ export default async function PatientDetailPage({
   if (!patient) {
     notFound()
   }
+
+  // Decrypt PHI fields stored as encrypted text
+  const medicalConditions = decryptJson<string[]>(patient.medical_conditions)
+  const allergies = decryptJson<string[]>(patient.allergies)
+  const medications = decryptJson<string[]>(patient.medications)
 
   const [{ data: appointments }, { data: callLogs }, { data: verifications }] = await Promise.all([
     supabase
@@ -154,9 +160,9 @@ export default async function PatientDetailPage({
                 <CardTitle>Medical Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <InfoRow label="Conditions" value={patient.medical_conditions?.join(', ')} />
-                <InfoRow label="Allergies" value={patient.allergies?.join(', ')} />
-                <InfoRow label="Medications" value={patient.medications?.join(', ')} />
+                <InfoRow label="Conditions" value={medicalConditions?.join(', ')} />
+                <InfoRow label="Allergies" value={allergies?.join(', ')} />
+                <InfoRow label="Medications" value={medications?.join(', ')} />
               </CardContent>
             </Card>
             <Card>

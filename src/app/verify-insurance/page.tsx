@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import InsuranceVerificationForm from './insurance-verification-form'
 
 export const metadata = {
-  title: 'Insurance Verification | Dental AI Growth System',
+  title: 'Insurance Verification | PracticeGuard AI',
   description: 'Complete your insurance verification securely.',
 }
 

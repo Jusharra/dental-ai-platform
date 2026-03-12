@@ -31,7 +31,7 @@ export function MarketingFooter() {
                 <Activity className="w-4 h-4 text-white" />
               </div>
               <div className="leading-tight">
-                <span className="text-white font-bold text-sm block">Dental AI Growth System</span>
+                <span className="text-white font-bold text-sm block">PracticeGuard AI</span>
                 <span className="text-orange-400 text-[10px] font-medium tracking-widest uppercase">by First-Choice Cyber</span>
               </div>
             </Link>
@@ -95,7 +95,7 @@ export function MarketingFooter() {
 
         <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-500 text-sm">
-            © {new Date().getFullYear()} Dental AI Growth System. A product by{' '}
+            © {new Date().getFullYear()} PracticeGuard AI. A product by{' '}
             <span className="text-orange-500 font-medium">First-Choice Cyber</span>. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-slate-500">

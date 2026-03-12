@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
             </p>
 
             <div style="border-top: 1px solid #e2e8f0; margin-top: 32px; padding-top: 20px; font-size: 12px; color: #94a3b8;">
-              ${practiceDisplayName} · Powered by Dental AI Growth System
+              ${practiceDisplayName} · Powered by PracticeGuard AI
             </div>
           </body>
         </html>

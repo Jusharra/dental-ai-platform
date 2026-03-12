@@ -7,6 +7,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Token required' }, { status: 400 })
   }
 
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  if (!UUID_RE.test(token)) {
+    return NextResponse.json({ error: 'Invalid token' }, { status: 400 })
+  }
+
   const service = createServiceClient()
 
   const { data: verification } = await service

@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Explicitly upsert the user record — don't rely solely on the DB trigger
+    const gracePeriodEnds = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
     const { error: userError } = await serviceClient
       .from('users')
       .upsert({
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
         full_name: fullName,
         role: 'practice_owner',
         practice_id: practice.id,
+        mfa_grace_period_ends: gracePeriodEnds,
       })
 
     if (userError) {

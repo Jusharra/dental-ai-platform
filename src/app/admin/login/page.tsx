@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
             <Shield className="w-7 h-7 text-orange-500" />
           </div>
           <h1 className="text-xl font-bold text-white">Admin Portal</h1>
-          <p className="text-slate-400 text-sm mt-1">First-Choice Cyber · Platform Administration</p>
+          <p className="text-slate-400 text-sm mt-1">PracticeGuard AI · Platform Administration</p>
         </div>
 
         {/* Form */}

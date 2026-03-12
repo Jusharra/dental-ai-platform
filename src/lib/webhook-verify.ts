@@ -1,4 +1,5 @@
 import { createServiceClient } from '@/lib/supabase/server'
+import { safeEqual } from '@/lib/cron-auth'
 import type { NextRequest } from 'next/server'
 
 export type WebhookFeature = 'inbound' | 'recall' | 'confirmation'
@@ -84,7 +85,7 @@ export async function verifyWebhook(
     return { ok: false, status: 401, error: 'Practice not found', code: 'practice_not_found' }
   }
 
-  if (practice.webhook_secret !== secret) {
+  if (!safeEqual(practice.webhook_secret ?? '', secret)) {
     await writeAuditLog(service, practice.id, feature, false, 'invalid_secret', ip)
     return { ok: false, status: 401, error: 'Invalid webhook secret', code: 'invalid_secret' }
   }

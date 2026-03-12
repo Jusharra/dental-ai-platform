@@ -389,7 +389,7 @@ export default function InsuranceVerificationForm({ token }: { token?: string })
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-6">
-          Secured by Dental AI Growth System · HIPAA-Compliant
+          Secured by PracticeGuard AI · HIPAA-Compliant
         </p>
       </div>
     </div>

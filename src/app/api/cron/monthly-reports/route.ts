@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { buildReport, type ReportType } from '@/lib/reports'
+import { safeEqual } from '@/lib/cron-auth'
 import { Resend } from 'resend'
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
@@ -10,8 +11,8 @@ const getResend = () => new Resend(process.env.RESEND_API_KEY)
  * vercel.json: { "crons": [{ "path": "/api/cron/monthly-reports", "schedule": "0 8 1 * *" }] }
  */
 export async function GET(request: NextRequest) {
-  const secret = request.headers.get('authorization')
-  if (secret !== `Bearer ${process.env.CRON_SECRET}`) {
+  const secret = request.headers.get('authorization') ?? ''
+  if (!safeEqual(secret, `Bearer ${process.env.CRON_SECRET ?? ''}`)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
             <div style="background: #0f172a; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-              <p style="color: #94a3b8; font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase;">First-Choice Cyber · Dental AI</p>
+              <p style="color: #94a3b8; font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase;">First-Choice Cyber · PracticeGuard AI</p>
               <h1 style="color: #fff; font-size: 22px; margin: 0;">Your Monthly ${label} Report</h1>
               <p style="color: #64748b; margin: 4px 0 0;">${practiceName} · ${monthLabel}</p>
             </div>

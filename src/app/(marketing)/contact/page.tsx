@@ -33,7 +33,7 @@ export default function ContactPage() {
           <motion.p variants={fadeUp} className="text-orange-500 font-semibold text-sm uppercase tracking-wider mb-3">Contact</motion.p>
           <motion.h1 variants={fadeUp} className="text-5xl font-bold text-white mb-5">Let&apos;s talk.</motion.h1>
           <motion.p variants={fadeUp} className="text-slate-400 text-lg">
-            Have questions about the Dental AI Growth System, or want a personalized demo? Our team at First-Choice Cyber is ready to help.
+            Have questions about the PracticeGuard AI, or want a personalized demo? Our team at First-Choice Cyber is ready to help.
           </motion.p>
         </motion.div>
       </section>
@@ -88,7 +88,7 @@ export default function ContactPage() {
               <motion.div variants={fadeUp} className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
                 <p className="font-bold text-slate-900 text-sm mb-1">First-Choice Cyber</p>
                 <p className="text-slate-500 text-sm leading-relaxed">
-                  We build compliant, AI-driven technology for healthcare-adjacent industries. The Dental AI Growth System — powered by Serenity — is our flagship dental practice automation platform.
+                  We build compliant, AI-driven technology for healthcare-adjacent industries. The PracticeGuard AI — powered by Serenity — is our flagship dental practice automation platform.
                 </p>
               </motion.div>
             </motion.div>

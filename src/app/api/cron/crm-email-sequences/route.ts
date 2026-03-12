@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { safeEqual } from '@/lib/cron-auth'
 import { Resend } from 'resend'
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY)
@@ -17,8 +18,8 @@ const EMAIL_SCHEDULE: Record<number, { daysUntilNext: number; nextStage: string 
 }
 
 export async function GET(request: NextRequest) {
-  const auth = request.headers.get('authorization')
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  const auth = request.headers.get('authorization') ?? ''
+  if (!safeEqual(auth, `Bearer ${process.env.CRON_SECRET ?? ''}`)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

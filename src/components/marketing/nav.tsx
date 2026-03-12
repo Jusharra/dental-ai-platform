@@ -41,7 +41,7 @@ export function MarketingNav() {
             </div>
             <div className="leading-tight">
               <span className="text-white font-bold text-sm tracking-tight block">
-                Dental AI Growth System
+                PracticeGuard AI
               </span>
               <span className="text-orange-400 text-[10px] font-medium tracking-widest uppercase">
                 by First-Choice Cyber

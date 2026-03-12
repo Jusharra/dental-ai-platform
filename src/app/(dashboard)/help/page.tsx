@@ -94,7 +94,7 @@ const FAQS: { category: string; question: string; answer: string }[] = [
     category: 'Getting Started',
     question: 'How does the platform work?',
     answer:
-      'The Dental AI Growth System connects your practice to an AI phone system powered by Retell AI. Make.com automations run on a schedule to check appointments and trigger AI calls — for confirmations (7-day, 3-day, 1-day, 3-hour reminders) and recall campaigns. Inbound calls are answered instantly by the AI receptionist. After each call, the result is automatically logged to your platform via secure webhooks.',
+      'The PracticeGuard AI connects your practice to an AI phone system powered by Retell AI. Make.com automations run on a schedule to check appointments and trigger AI calls — for confirmations (7-day, 3-day, 1-day, 3-hour reminders) and recall campaigns. Inbound calls are answered instantly by the AI receptionist. After each call, the result is automatically logged to your platform via secure webhooks.',
   },
   {
     category: 'Getting Started',
@@ -357,7 +357,7 @@ export default function HelpCenterPage() {
           Help Center
         </h1>
         <p className="text-muted-foreground">
-          Everything you need to get the most out of your Dental AI Growth System
+          Everything you need to get the most out of your PracticeGuard AI
         </p>
       </div>
 

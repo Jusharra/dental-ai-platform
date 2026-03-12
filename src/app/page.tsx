@@ -93,7 +93,7 @@ export default function HomePage() {
             <motion.div variants={fadeUp} className="mb-6">
               <span className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium px-4 py-1.5 rounded-full">
                 <Zap className="w-3.5 h-3.5" />
-                Dental AI Growth System
+                PracticeGuard AI
               </span>
             </motion.div>
 
@@ -174,7 +174,7 @@ export default function HomePage() {
               One platform. Complete automation.
             </motion.h2>
             <motion.p variants={fadeUp} className="text-lg text-slate-500 max-w-2xl mx-auto">
-              From the first patient call to full compliance documentation, the Dental AI Growth System handles the operational work so your team can focus on care.
+              From the first patient call to full compliance documentation, the PracticeGuard AI handles the operational work so your team can focus on care.
             </motion.p>
           </motion.div>
 
@@ -219,7 +219,7 @@ export default function HomePage() {
               Set up in hours. Runs forever.
             </motion.h2>
             <motion.p variants={fadeUp} className="text-lg text-slate-400 max-w-2xl mx-auto">
-              The Dental AI Growth System integrates with your existing tools and starts handling patient communications from day one.
+              The PracticeGuard AI integrates with your existing tools and starts handling patient communications from day one.
             </motion.p>
           </motion.div>
 
@@ -273,7 +273,7 @@ export default function HomePage() {
           >
             {[
               { icon: Clock, title: 'Zero Hold Times', desc: 'Serenity picks up every call instantly — no queues, no missed calls, no after-hours voicemails.' },
-              { icon: Users, title: 'Works for Every Practice', desc: 'Whether you are a solo dentist or a multi-site DSO, the Dental AI Growth System scales to match your patient volume.' },
+              { icon: Users, title: 'Works for Every Practice', desc: 'Whether you are a solo dentist or a multi-site DSO, the PracticeGuard AI scales to match your patient volume.' },
               { icon: Star, title: 'Enterprise-Grade Security', desc: 'SOC 2-ready infrastructure, encrypted PHI storage, and a full HIPAA Business Associate Agreement included.' },
             ].map((item) => (
               <motion.div key={item.title} variants={fadeUp} className="flex gap-4">
@@ -339,7 +339,7 @@ export default function HomePage() {
               Ready to grow your practice with AI?
             </motion.h2>
             <motion.p variants={fadeUp} className="text-orange-100 text-lg mb-8">
-              Join dental practices already using the Dental AI Growth System to reduce front desk burden and never miss a patient call.
+              Join dental practices already using the PracticeGuard AI to reduce front desk burden and never miss a patient call.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-4">
               <Link

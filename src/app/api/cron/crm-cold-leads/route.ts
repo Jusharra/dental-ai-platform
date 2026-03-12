@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { safeEqual } from '@/lib/cron-auth'
 
 /**
  * Marks leads as Cold after 30 days with no booking.
  * Scheduled daily at midnight UTC via Supabase pg_cron.
  */
 export async function GET(request: NextRequest) {
-  const auth = request.headers.get('authorization')
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  const auth = request.headers.get('authorization') ?? ''
+  if (!safeEqual(auth, `Bearer ${process.env.CRON_SECRET ?? ''}`)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

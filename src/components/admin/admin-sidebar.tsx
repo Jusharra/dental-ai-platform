@@ -44,7 +44,7 @@ export function AdminSidebar({ adminName, openTicketCount = 0 }: { adminName: st
           </div>
           <div>
             <p className="text-sm font-bold text-white leading-none">Admin Portal</p>
-            <p className="text-xs text-slate-500 mt-0.5">First-Choice Cyber</p>
+            <p className="text-xs text-slate-500 mt-0.5">PracticeGuard AI</p>
           </div>
         </div>
       </div>

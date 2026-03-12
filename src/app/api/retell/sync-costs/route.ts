@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
+import { safeEqual } from '@/lib/cron-auth'
 
 /**
  * Pulls call cost data from Retell AI API and back-fills retell_cost_cents
@@ -10,8 +11,8 @@ import { createClient, createServiceClient } from '@/lib/supabase/server'
  */
 export async function POST(request: NextRequest) {
   // Allow super_admin or cron secret
-  const cronSecret = request.headers.get('x-cron-secret')
-  const isCron = cronSecret === process.env.CRON_SECRET
+  const cronSecret = request.headers.get('x-cron-secret') ?? ''
+  const isCron = safeEqual(cronSecret, process.env.CRON_SECRET ?? '')
 
   if (!isCron) {
     const supabase = createClient()

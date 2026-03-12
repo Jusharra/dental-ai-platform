@@ -65,9 +65,9 @@ export type Patient = {
   subscriber_name: string | null
   subscriber_dob: string | null
   subscriber_relationship: 'self' | 'spouse' | 'child' | 'other' | null
-  medical_conditions: string[] | null
-  allergies: string[] | null
-  medications: string[] | null
+  medical_conditions: string | null  // stored as encrypted text; decrypt with decryptJson<string[]>()
+  allergies: string | null            // stored as encrypted text; decrypt with decryptJson<string[]>()
+  medications: string | null          // stored as encrypted text; decrypt with decryptJson<string[]>()
   preferred_contact_method: 'phone' | 'email' | 'sms'
   can_receive_sms: boolean
   can_receive_email: boolean
