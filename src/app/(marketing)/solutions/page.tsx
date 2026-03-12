@@ -30,7 +30,7 @@ const solutions = [
     icon: Building2,
     segment: 'Group Practices',
     headline: 'Standardize operations across every provider and location.',
-    body: 'Group practices face the challenge of consistency — different providers, different schedules, and multiple front desk staff. The PracticeGuard AI centralizes patient communication and compliance management under one platform.',
+    body: 'Group practices face the challenge of consistency — different providers, different schedules, and multiple front desk staff. The Dental Patient Operations & Compliance Platform centralizes patient communication and compliance management under one platform.',
     features: [
       'Multi-provider scheduling logic',
       'Role-based staff access',
@@ -82,7 +82,7 @@ export default function SolutionsPage() {
             Built for every practice size.
           </motion.h1>
           <motion.p variants={fadeUp} className="text-slate-400 text-lg leading-relaxed">
-            Whether you are a solo dentist or a 50-location DSO, the PracticeGuard AI scales to meet you exactly where you are.
+            Whether you are a solo dentist or a 50-location DSO, the platform scales to meet you exactly where you are.
           </motion.p>
         </motion.div>
       </section>

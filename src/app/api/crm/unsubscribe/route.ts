@@ -59,7 +59,7 @@ function unsubscribedPage(name: string, alreadyDone: boolean): string {
 <body>
   <div class="card">
     <h1>Unsubscribed</h1>
-    <p>${msg} You won't receive any more emails from First-Choice Cyber.</p>
+    <p>${msg} You won't receive any more emails from us.</p>
   </div>
 </body>
 </html>`

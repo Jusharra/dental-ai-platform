@@ -39,12 +39,12 @@ export function MarketingNav() {
             <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shrink-0">
               <Activity className="w-4 h-4 text-white" />
             </div>
-            <div className="leading-tight">
-              <span className="text-white font-bold text-sm tracking-tight block">
-                PracticeGuard AI
+            <div className="leading-snug">
+              <span className="text-white font-bold text-[11px] tracking-tight block">
+                Dental Patient Operations
               </span>
-              <span className="text-orange-400 text-[10px] font-medium tracking-widest uppercase">
-                by First-Choice Cyber
+              <span className="text-white font-bold text-[11px] tracking-tight block">
+                &amp; Compliance Platform
               </span>
             </div>
           </Link>

@@ -88,7 +88,7 @@ const faqs = [
   { q: 'Is there a free trial?', a: 'Yes — all Individual plans include a 14-day free trial with no credit card required.' },
   { q: 'Can I change plans later?', a: 'Absolutely. You can upgrade, downgrade, or cancel at any time from your dashboard settings.' },
   { q: 'What PMS systems are supported?', a: 'Serenity Core and Complete plans support Dentrix, Eaglesoft, OpenDental, Curve, and more via API integration.' },
-  { q: 'Is the PracticeGuard AI HIPAA compliant?', a: 'Yes. The platform includes a Business Associate Agreement (BAA) and all data is encrypted at rest and in transit.' },
+  { q: 'Is the platform HIPAA compliant?', a: 'Yes. The platform includes a Business Associate Agreement (BAA) and all data is encrypted at rest and in transit.' },
 ]
 
 export default function PricingPage() {

@@ -14,7 +14,7 @@ export default async function AdminSettingsPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-white">Platform Settings</h1>
-          <p className="text-slate-400 text-sm">Global configuration for PracticeGuard AI</p>
+          <p className="text-slate-400 text-sm">Global configuration for Dental Patient Operations &amp; Compliance Platform</p>
         </div>
       </div>
 

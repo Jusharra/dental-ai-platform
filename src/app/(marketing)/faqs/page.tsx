@@ -12,9 +12,9 @@ const categories = [
   {
     label: 'General',
     faqs: [
-      { q: 'What is the PracticeGuard AI?', a: 'The PracticeGuard AI is an AI-powered patient operations platform for dental practices. It handles inbound calls, appointment recall, confirmation reminders, and HIPAA compliance management — 24/7, without any staff involvement.' },
-      { q: 'Who is Serenity?', a: 'Serenity is the AI voice assistant at the core of the PracticeGuard AI. She answers calls, handles recall outreach, and confirms appointments around the clock — sounding natural, professional, and empathetic.' },
-      { q: 'Who makes the PracticeGuard AI?', a: 'The PracticeGuard AI is a product of First-Choice Cyber, a technology firm focused on building compliant, AI-driven solutions for healthcare-adjacent industries.' },
+      { q: 'What is the Dental Patient Operations & Compliance Platform?', a: 'The Dental Patient Operations & Compliance Platform is an AI-powered patient operations platform for dental practices. It handles inbound calls, appointment recall, confirmation reminders, and HIPAA compliance management — 24/7, without any staff involvement.' },
+      { q: 'Who is Serenity?', a: 'Serenity is the AI voice assistant at the core of the Dental Patient Operations & Compliance Platform. She answers calls, handles recall outreach, and confirms appointments around the clock — sounding natural, professional, and empathetic.' },
+      { q: 'Who makes the Dental Patient Operations & Compliance Platform?', a: 'The Dental Patient Operations & Compliance Platform is built by a team of healthcare technology specialists focused on compliant, AI-driven solutions for dental and healthcare-adjacent industries.' },
       { q: 'Do I need technical knowledge to use it?', a: 'No. The platform is designed to be set up and managed by practice managers and front-desk staff — no coding required. Our onboarding team handles all integration configuration.' },
     ],
   },
@@ -38,7 +38,7 @@ const categories = [
   {
     label: 'Compliance & Security',
     faqs: [
-      { q: 'Is the PracticeGuard AI HIPAA compliant?', a: 'Yes. The platform is built HIPAA-compliant from the ground up. All patient data is encrypted at rest and in transit. A Business Associate Agreement (BAA) is included with every plan.' },
+      { q: 'Is the Dental Patient Operations & Compliance Platform HIPAA compliant?', a: 'Yes. The platform is built HIPAA-compliant from the ground up. All patient data is encrypted at rest and in transit. A Business Associate Agreement (BAA) is included with every plan.' },
       { q: 'Where is patient data stored?', a: 'All data is stored in Supabase (PostgreSQL), which offers HIPAA-eligible infrastructure with encryption, access controls, and audit logging. Data is hosted in the US.' },
       { q: 'Does the platform store call recordings?', a: 'Yes. Call recordings and full transcripts are stored and accessible in your dashboard. You control retention policies and access permissions by staff role.' },
       { q: 'What compliance frameworks are covered?', a: 'The platform tracks HIPAA, OSHA, State Dental Board requirements, BAAs, staff training records, license expirations, sterilization logs, risk assessments, and incident reports.' },
@@ -98,7 +98,7 @@ export default function FaqsPage() {
         >
           <motion.p variants={fadeUp} className="text-orange-500 font-semibold text-sm uppercase tracking-wider mb-3">FAQs</motion.p>
           <motion.h1 variants={fadeUp} className="text-5xl font-bold text-white mb-5">Frequently asked questions</motion.h1>
-          <motion.p variants={fadeUp} className="text-slate-400 text-lg">Everything you need to know about the PracticeGuard AI. Can&apos;t find your answer? <Link href="/contact" className="text-orange-400 hover:underline">Contact us</Link>.</motion.p>
+          <motion.p variants={fadeUp} className="text-slate-400 text-lg">Everything you need to know about the Dental Patient Operations & Compliance Platform. Can&apos;t find your answer? <Link href="/contact" className="text-orange-400 hover:underline">Contact us</Link>.</motion.p>
         </motion.div>
       </section>
 

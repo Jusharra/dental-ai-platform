@@ -76,7 +76,7 @@ export function VapiWidget() {
             {callStatus === 'idle' && (
               <>
                 <p className="text-slate-300 text-sm mb-4 leading-relaxed">
-                  Have a question? Talk to Serenity — our AI assistant — about pricing, features, or how the PracticeGuard AI can work for your practice.
+                  Have a question? Talk to Serenity — our AI assistant — about pricing, features, or how the platform can work for your practice.
                 </p>
                 <button
                   onClick={startCall}

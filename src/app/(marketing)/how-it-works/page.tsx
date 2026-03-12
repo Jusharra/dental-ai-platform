@@ -33,7 +33,7 @@ const steps = [
     num: '04',
     icon: Shield,
     title: 'Compliance Tracked Automatically',
-    body: 'While Serenity manages patient communications, the PracticeGuard AI simultaneously tracks your HIPAA compliance posture — policy status, BAA signatures, staff training records, license expirations, and audit logs — all in one place.',
+    body: 'While Serenity manages patient communications, the platform simultaneously tracks your HIPAA compliance posture — policy status, BAA signatures, staff training records, license expirations, and audit logs — all in one place.',
     points: ['HIPAA policy management', 'BAA tracking', 'Staff training records', 'Automated compliance alerts'],
   },
 ]
@@ -67,7 +67,7 @@ export default function HowItWorksPage() {
             From first call to full compliance — automated.
           </motion.h1>
           <motion.p variants={fadeUp} className="text-slate-400 text-lg leading-relaxed">
-            The PracticeGuard AI integrates with your existing tools and has Serenity handle patient communications end-to-end, while keeping your practice fully compliant.
+            The platform integrates with your existing tools and has Serenity handle patient communications end-to-end, while keeping your practice fully compliant.
           </motion.p>
         </motion.div>
       </section>
@@ -125,7 +125,7 @@ export default function HowItWorksPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl font-bold text-white mb-3">Integrates with your existing stack</h2>
-            <p className="text-slate-400 mb-10">The PracticeGuard AI works with the tools dental practices already use.</p>
+            <p className="text-slate-400 mb-10">The platform works with the tools dental practices already use.</p>
             <div className="flex flex-wrap justify-center gap-3">
               {integrations.map((name) => (
                 <span key={name} className="bg-slate-800 border border-slate-700 text-slate-300 text-sm px-4 py-2 rounded-full">
