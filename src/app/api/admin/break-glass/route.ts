@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
   }
 
   // Delete all TOTP factors — the refreshed session will be AAL1 (valid without MFA)
-  const { data: factors } = await service.auth.admin.mfa.listFactors({ userId: user.id })
-  for (const factor of factors?.totp ?? []) {
+  const { data: factorData } = await service.auth.admin.mfa.listFactors({ userId: user.id })
+  for (const factor of factorData?.factors?.filter(f => f.factor_type === 'totp') ?? []) {
     await service.auth.admin.mfa.deleteFactor({ userId: user.id, id: factor.id })
   }
 

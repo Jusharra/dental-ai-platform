@@ -38,8 +38,8 @@ export async function POST(request: NextRequest) {
   await service.from('mfa_recovery_codes').update({ used_at: new Date().toISOString() }).eq('id', row.id)
 
   // Delete all TOTP factors so the AAL1 session becomes fully valid
-  const { data: factors } = await service.auth.admin.mfa.listFactors({ userId: user.id })
-  for (const factor of factors?.totp ?? []) {
+  const { data: factorData } = await service.auth.admin.mfa.listFactors({ userId: user.id })
+  for (const factor of factorData?.factors?.filter(f => f.factor_type === 'totp') ?? []) {
     await service.auth.admin.mfa.deleteFactor({ userId: user.id, id: factor.id })
   }
 
