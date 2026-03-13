@@ -1,42 +1,78 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import { verifyWebhook } from '@/lib/webhook-verify'
+import { createHmac } from 'crypto'
+
+/**
+ * Verifies the x-retell-signature header using HMAC-SHA256
+ * with the RETELL_API_KEY as the secret.
+ */
+function verifyRetellSignature(rawBody: string, signature: string | null): boolean {
+  if (!signature || !process.env.RETELL_API_KEY) return false
+  const hmac = createHmac('sha256', process.env.RETELL_API_KEY)
+  hmac.update(rawBody)
+  return hmac.digest('base64') === signature
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const rawBody = await request.text()
 
-    // Per-practice verification + subscription gating
-    const result = await verifyWebhook(request, 'recall', body.practice_id)
-    if (!result.ok) {
-      return NextResponse.json({ error: result.error, code: result.code }, { status: result.status })
+    if (!verifyRetellSignature(rawBody, request.headers.get('x-retell-signature'))) {
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
     }
 
-    const { call_id, practice_id, patient_id, campaign_id, call_outcome,
-            appointment_date, appointment_time, provider_name,
-            transcript, recording_url, call_duration, call_cost } = body
+    const body = JSON.parse(rawBody)
 
-    if (!practice_id || !call_id) {
-      return NextResponse.json({ error: 'Missing required fields: practice_id, call_id' }, { status: 400 })
+    // Only process call_analyzed — this is when full analysis data is available
+    if (body.event !== 'call_analyzed') {
+      return NextResponse.json({ ok: true, skipped: true })
     }
 
-    const retellCostCents = call_cost ? Math.round(call_cost * 100) : 0
+    const call        = body.call ?? {}
+    const vars        = call.retell_llm_dynamic_variables ?? {}
+    const analysis    = call.call_analysis ?? {}
+    const customData  = analysis.custom_analysis_data ?? {}
+
+    const practice_id  = vars.practice_id
+    const patient_id   = vars.patient_id   ?? null
+    const campaign_id  = vars.campaign_id  ?? null
+    const patient_phone = vars.patient_phone ?? call.to_number ?? ''
+
+    if (!practice_id) {
+      return NextResponse.json({ error: 'Missing practice_id in dynamic variables' }, { status: 400 })
+    }
+
+    // Derive call_outcome from Retell analysis
+    let call_outcome: string
+    if (analysis.call_successful) {
+      call_outcome = 'appointment_booked'
+    } else if (analysis.in_voicemail) {
+      call_outcome = 'voicemail'
+    } else {
+      call_outcome = 'no_answer'
+    }
+
+    const retellCostCents = call.call_cost?.combined_cost
+      ? Math.round(call.call_cost.combined_cost * 100)
+      : 0
+    const call_duration = call.duration_ms ? Math.round(call.duration_ms / 1000) : null
+
     const supabase = createServiceClient()
 
     // Create appointment if booked
     let appointmentId = null
-    if ((call_outcome === 'appointment_scheduled' || call_outcome === 'appointment_booked') && patient_id && appointment_date) {
+    if (call_outcome === 'appointment_booked' && patient_id && customData.appointment_date) {
       const { data: appointment } = await supabase
         .from('appointments')
         .insert({
           practice_id,
           patient_id,
-          provider_name: provider_name || 'TBD',
-          appointment_date,
-          appointment_time: appointment_time || '09:00',
-          status: 'scheduled',
-          confirmation_status: 'pending',
-          procedure_type: 'cleaning',
+          provider_name:        customData.provider_name || 'TBD',
+          appointment_date:     customData.appointment_date,
+          appointment_time:     customData.appointment_time || '09:00:00',
+          status:               'scheduled',
+          confirmation_status:  'pending',
+          procedure_type:       'cleaning',
         })
         .select('id')
         .single()
@@ -47,24 +83,25 @@ export async function POST(request: NextRequest) {
     // Log the call
     await supabase.from('call_logs').insert({
       practice_id,
-      patient_id:            patient_id || null,
+      patient_id:            patient_id,
       appointment_id:        appointmentId,
-      retell_call_id:        call_id,
+      retell_call_id:        call.call_id,
       call_type:             'recall',
-      phone_number:          body.patient_phone || '',
+      phone_number:          patient_phone,
       call_date:             new Date().toISOString().split('T')[0],
       call_time:             new Date().toTimeString().split(' ')[0],
-      call_duration_seconds: call_duration || null,
-      call_outcome:          call_outcome === 'appointment_scheduled' ? 'appointment_booked' : call_outcome,
+      call_duration_seconds: call_duration,
+      call_outcome,
       retell_cost_cents:     retellCostCents,
-      transcript:            transcript || null,
-      recording_url:         recording_url || null,
+      transcript:            call.transcript    ?? null,
+      recording_url:         call.recording_url ?? null,
+      summary:               analysis.call_summary ?? null,
       agent_type:            'recall_agent',
     })
 
     // Update recall campaign stats
     if (campaign_id) {
-      const isBooked = call_outcome === 'appointment_scheduled' || call_outcome === 'appointment_booked'
+      const isBooked = call_outcome === 'appointment_booked'
       await supabase.rpc('increment_campaign_contacted', { cid: campaign_id })
       if (isBooked) await supabase.rpc('increment_campaign_booked', { cid: campaign_id })
 
@@ -72,9 +109,9 @@ export async function POST(request: NextRequest) {
         await supabase
           .from('recall_campaign_patients')
           .update({
-            contact_status:         isBooked ? 'booked' : 'contacted',
-            last_contact_attempt:   new Date().toISOString(),
-            booked_appointment_id:  appointmentId,
+            contact_status:        isBooked ? 'booked' : 'contacted',
+            last_contact_attempt:  new Date().toISOString(),
+            booked_appointment_id: appointmentId,
           })
           .eq('campaign_id', campaign_id)
           .eq('patient_id', patient_id)
@@ -89,9 +126,9 @@ export async function POST(request: NextRequest) {
         .eq('id', patient_id)
     }
 
-    return NextResponse.json({ success: true, appointment_id: appointmentId })
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('Recall webhook error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new NextResponse(null, { status: 500 })
   }
 }
